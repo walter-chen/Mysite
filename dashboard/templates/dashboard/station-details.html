@@ -1,0 +1,162 @@
+{% extends "dashboard/dashboard-base.html" %}
+  {% block individual %}
+    {% load static %}
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+  {% endblock %}  
+  {% block content %}
+	  <div class ="row">
+	    <h1 class ="page-header">详情</h1>
+	    <div class ="col-xs-6" id="map_div" style="width: 400px; height: 300px"></div>
+	    <div class="col-xs-6" id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
+	  </div>
+	  <div class ="row">
+	    <table class="table">
+	      <thead>
+	        <tr>
+	          <th class="col-md-3 col-xs-3">站址编码</th>
+	          <th class="col-md-3 col-xs-3">站址名称</th>
+	          <th class="col-md-2 col-xs-2">区域</th>
+	          <th class="col-md-2 col-xs-2">经度</th>
+	          <th class="col-md-2 col-xs-2">维度</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	         <tr>
+	          <td>{{station.station_code}}</td>
+	          <td>{{station.station_name}}</td>
+	          <td>{{station.district}}</td>
+	          <td>{{station.longitude}}</td>
+	          <td>{{station.latitude}}</td>
+	        </tr>
+	      </tbody>
+	    </table>
+	  </div>
+	  
+	  <div class ="row">
+	    <table class="table">
+	      <thead>
+	        <tr>
+	          <th class="col-md-3 col-xs-3">资产编码</th>
+	          <th class="col-md-9 col-xs-9">资产名称</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	      	 {% if resources %}
+	      	 {% for resource in resources %}
+	         	<tr>
+	          	  <td>{{resource.resource_code}}</td>
+	          	  <td>{{resource.resource_name}}</td>
+	        	</tr>
+	         {% endfor %}
+	         {% endif %}
+	      </tbody>
+	    </table>
+	  </div>
+	  
+	  <div class ="row">
+	    <table class="table">
+	      <thead>
+	        <tr>
+	          <th class="col-md-3 col-xs-3">合同编码</th>
+	          <th class="col-md-3 col-xs-3">合同类型</th>
+	          <th class="col-md-2 col-xs-2">合同金额</th>
+	          <th class="col-md-2 col-xs-2">起始时间</th>
+	          <th class="col-md-2 col-xs-2">结束时间</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	      	 {% if contracts %}
+	      	 {% for contract in contracts %}
+	         	<tr>
+	          	  <td>{{contract.contract_code}}</td>
+	          	  <td>{{contract.contract_type}}</td>
+	          	  <td>{{contract.price}}</td>
+	          	  <td>{{contract.start_date}}</td>
+	          	  <td>{{contract.end_date}}</td>
+	        	</tr>
+	         {% endfor %}
+	         {% endif %}
+	      </tbody>
+	    </table>
+	  </div>
+	  
+  {% endblock %}
+  
+  {% block myscript %}
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load("upcoming", {packages:["map"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Lat', 'Long', 'Name'],
+          [{{station.latitude}}, {{station.longitude}}, '{{station.station_name}}']
+        ]);
+
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+        map.draw(data, {
+          showTooltip: true,
+          showInfoWindow: true
+        });
+      }   
+    </script>
+	<script type="text/javascript">
+	      $(function () {
+		    $('#container').highcharts({
+		        chart: {
+		            plotBackgroundColor: null,
+		            plotBorderWidth: null,
+		            plotShadow: false,
+		            type: 'pie'
+		        },
+		        title: {
+		            text: '故障告警类别'
+		        },
+		        tooltip: {
+		            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+		        },
+		        plotOptions: {
+		            pie: {
+		                allowPointSelect: true,
+		                cursor: 'pointer',
+		                dataLabels: {
+		                    enabled: true,
+		                    format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+		                    style: {
+		                        color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+		                    }
+		                }
+		            }
+		        },
+		        series: [{
+		            name: '占比',
+		            colorByPoint: true,
+		            data: [{
+		                name: '高温告警',
+		                y: {{highTemperatureRatio}}
+		            }, {
+		                name: '水浸告警',
+		                y: {{waterLoggingRatio}},
+		                sliced: true,
+		                selected: true
+		            }, {
+		                name: '停电告警',
+		                y: {{powerFailureRatio}}
+		            }, {
+		                name: '电池告警',
+		                y: {{batteryRatio}}
+		            }, {
+		                name: '其他',
+		                y: {{othersRatio}}
+		            }]
+		        }]
+		    });
+		});
+	</script>
+  {% endblock %}
+
+
+
+

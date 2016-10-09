@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+      <script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+      <script type="text/javascript">
+
+	  </script>
+	</head>
+	<body>
+    <form action="getValueFromForm" method="post">
+    {% csrf_token %}
+		<div>
+		  <label>所属区县：</label>
+		  <select name="district">
+		  	<option value="思明">思明</option>
+		 	<option value="海沧">海沧</option>
+		 	<option value="湖里">湖里</option>
+		  	<option value="翔安">翔安</option>
+		  	<option value="同安">同安</option>
+		  	<option value="集美">集美</option>
+		  </select>
+		</div>
+		<div>
+		  <label>站点名称：</label>
+		  <input type="text" name="stationname"/>
+		</div>
+		<div>
+		  <label>站点编码：</label>
+		  <input type="number" name="stationcode"/>
+		</div>
+		<div>
+		  <label>经度(度)：</label>
+		  <input type="text" name="longitude"/>
+		  <label>纬度(度)：</label>
+		  <input type="text" name="latitude"/>
+		</div>
+		<div>
+		  <label>地址：</label>
+		  <input type="text" name="address">
+		</div>
+		<div>
+		  <label>运营商：</label>
+		  <div>
+		    <label>
+		      <input type="checkbox" name="checkboxes1" id="checkboxes-0" value="移动"/>
+		      移动
+		    </label>
+		    <label>
+		      <input type="checkbox" name="checkboxes2" id="checkboxes-1" value="联通"/>
+		      联通
+		    </label>
+		    <label>
+		      <input type="checkbox" name="checkboxes3" id="checkboxes-2" value="电信"/>
+		      电信
+		    </label>
+		  </div>
+		  <div>
+		  	<label>详细地址：</label>
+		  	<input type="text" name="address"/>
+		  </div>
+		<div>
+		  <label>机房类型：</label>
+		  <select name="storageroom">
+		    <option value="无">无</option>
+		  	<option value="彩钢板房">彩钢板房</option>
+		 	<option value="砖混机房">砖混机房</option>
+		 	<option value="一体化机柜">一体化机柜</option>
+		  	<option value="一体化机房">一体化机房</option>
+		  </select>
+		  <label>机房面积(平方米)：</label>
+		    <input type="number" name="storageroomarea"/ value="0">
+		</div>	  
+		<div>
+		  <label>铁塔类型：</label>
+		  <select name="towertpye">
+		    <option value="无">无</option>
+		  	<option value="H杆塔">H杆塔</option>
+		 	<option value="抱杆">抱杆</option>
+		 	<option value="单管塔">单管塔</option>
+		  	<option value="景观塔">景观塔</option>
+		  	<option value="仿生树">仿生树</option>
+		  	<option value="监控杆">监控杆</option>
+		 	<option value="角钢塔">角钢塔</option>
+		  	<option value="落地塔">落地塔</option>
+		  	<option value="三管塔">三管塔</option>
+		  </select>
+		  <label>铁塔高度(米)：</label>
+		    <input type="number" name="towerheight"/ value="0">
+		</div>			  
+		<div>
+			<input type="datetime-local" name="bday">
+		</div>
+		<button type="submit">提交</button>
+	</form>	
+	
+	
+
+	
+	
+    </body>
+</html>
