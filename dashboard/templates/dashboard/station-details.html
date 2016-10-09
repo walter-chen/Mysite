@@ -15,11 +15,11 @@
 	    <table class="table">
 	      <thead>
 	        <tr>
-	          <th class="col-md-3 col-xs-3">站址编码</th>
-	          <th class="col-md-3 col-xs-3">站址名称</th>
+	          <th class="col-md-2 col-xs-2">站址编码</th>
+	          <th class="col-md-2 col-xs-2">站址名称</th>
 	          <th class="col-md-2 col-xs-2">区域</th>
 	          <th class="col-md-2 col-xs-2">经度</th>
-	          <th class="col-md-2 col-xs-2">维度</th>
+	          <th class="col-md-4 col-xs-4">纬度</th>
 	        </tr>
 	      </thead>
 	      <tbody>
@@ -38,8 +38,64 @@
 	    <table class="table">
 	      <thead>
 	        <tr>
-	          <th class="col-md-3 col-xs-3">资产编码</th>
-	          <th class="col-md-9 col-xs-9">资产名称</th>
+	          <th class="col-md-2 col-xs-2">订单编码</th>
+	          <th class="col-md-2 col-xs-2">订单状态</th>
+	          <th class="col-md-2 col-xs-2">客户</th>
+	          <th class="col-md-2 col-xs-2">起始时间</th>
+	          <th class="col-md-2 col-xs-2">结束时间</th>
+	          <th class="col-md-2 col-xs-2">订单那价格</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	      	 {% if indents %}
+	      	 {% for indent in indents %}
+	         	<tr>
+	          	  <td>{{indent.indent_code}}</td>
+	          	  <td>{{indent.indent_status}}</td>
+	          	  <td>{{indent.client}}</td>
+	          	  <td>{{indent.start_date|date:"Y-m-d"}}</td>
+	          	  <td>{{indent.end_date|date:"Y-m-d"}}</td>
+	        	  <td>{{indent.price}}</td>
+	        	</tr>
+	         {% endfor %}
+	         {% endif %}
+	      </tbody>
+	    </table>
+	  </div>
+	  
+	  <div class ="row">
+	    <table class="table">
+	      <thead>
+	        <tr>
+	          <th class="col-md-2 col-xs-2">项目编码</th>
+	          <th class="col-md-2 col-xs-2">建设类型</th>
+	          <th class="col-md-2 col-xs-2">铁塔类型</th>
+	          <th class="col-md-2 col-xs-2">机房类型</th>
+	          <th class="col-md-4 col-xs-4">投资额</th>
+	        </tr>
+	      </thead>
+	      <tbody>
+	      	 {% if projects %}
+	      	 {% for project in projects %}
+	         	<tr>
+	          	  <td>{{project.project_code}}</td>
+	          	  <td>{{project.construction_type}}</td>
+	          	  <td>{{project.tower_type}}</td>
+	          	  <td>{{project.room_type}}</td>
+	        	  <td>{{project.investment_price}}</td>
+	        	</tr>
+	         {% endfor %}
+	         {% endif %}
+	      </tbody>
+	    </table>
+	  </div>
+	  
+	  <div class ="row">
+	    <table class="table">
+	      <thead>
+	        <tr>
+	          <th class="col-md-2 col-xs-2">资产编码</th>
+	          <th class="col-md-10 col-xs-10">资产名称</th>
 	        </tr>
 	      </thead>
 	      <tbody>
@@ -59,11 +115,11 @@
 	    <table class="table">
 	      <thead>
 	        <tr>
-	          <th class="col-md-3 col-xs-3">合同编码</th>
-	          <th class="col-md-3 col-xs-3">合同类型</th>
+	          <th class="col-md-2 col-xs-2">合同编码</th>
+	          <th class="col-md-2 col-xs-2">合同类型</th>
 	          <th class="col-md-2 col-xs-2">合同金额</th>
 	          <th class="col-md-2 col-xs-2">起始时间</th>
-	          <th class="col-md-2 col-xs-2">结束时间</th>
+	          <th class="col-md-4 col-xs-4">结束时间</th>
 	        </tr>
 	      </thead>
 	      <tbody>
@@ -73,8 +129,8 @@
 	          	  <td>{{contract.contract_code}}</td>
 	          	  <td>{{contract.contract_type}}</td>
 	          	  <td>{{contract.price}}</td>
-	          	  <td>{{contract.start_date}}</td>
-	          	  <td>{{contract.end_date}}</td>
+	          	  <td>{{contract.start_date|date:"Y-m-d"}}</td>
+	          	  <td>{{contract.end_date|date:"Y-m-d"}}</td>
 	        	</tr>
 	         {% endfor %}
 	         {% endif %}

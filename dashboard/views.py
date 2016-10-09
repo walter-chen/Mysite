@@ -2,7 +2,7 @@
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 
-from dashboard.models import Station, Order, Resource, Property
+from dashboard.models import Station, Order, Resource, Property, Indent, Project
 
 
 def dashboard(request):
@@ -36,6 +36,8 @@ def stationDetails(request, station_code):
    
     resourcesList = list(Resource.objects.filter(station_code = station_code))
     contractsList = list(Property.objects.filter(station_code = station_code))
+    indentsList = list(Indent.objects.filter(station_code = station_code))
+    projectsList = list(Project.objects.filter(station_code = station_code))
     
     if alarmAmount!=0:
         highTemperatureRatio = float(highTemperatureAmount)/alarmAmount
@@ -48,6 +50,8 @@ def stationDetails(request, station_code):
         context = {'station':station,
                    'resources':resourcesList,
                    'contracts':contractsList,
+                   'indents':indentsList,
+                   'projects':projectsList,
                    'highTemperatureRatio':highTemperatureRatio,
                    'powerFailureRatio':powerFailureRatio,
                    'waterLoggingRatio':waterLoggingRatio,
@@ -56,7 +60,9 @@ def stationDetails(request, station_code):
     else:
         context={'station':station,
                  'resources':resourcesList,
-                 'contracts':contractsList} 
+                 'contracts':contractsList,
+                 'indents':indentsList,
+                 'projects':projectsList} 
                    
     return render(request, 'dashboard/station-details.html', context)
 
