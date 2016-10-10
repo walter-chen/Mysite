@@ -24,7 +24,7 @@
 	      {% for station in stations %}
 		      <tr>
 		        <td><a href="{% url 'dashboard:stationDetails' station.station_code %}">{{ station.station_name }}</a></td>
-		        <td>{{ station.district }}</td>
+		        <td>{{ station.district_id }}</td>
 		        <td>{{ station.address }}</td>
 		      </tr>
 		   {% endfor %}

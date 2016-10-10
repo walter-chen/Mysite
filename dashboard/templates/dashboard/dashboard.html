@@ -2,19 +2,154 @@
   
   {% block individual %}
     {% load static %}
-    
+	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
   {% endblock %}  
   
   {% block content %}
   	  <div class ="row">
-	    <div class ="page-header">站址总数：2500</div>
-	    <h1 class ="page-header">站址总数：2500</h1>
-	    <div class ="col-xs-6" id="map_div" style="width: 400px; height: 300px">123</div>
-	    <div class="col-xs-6" id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto">123</div>
+  	    <h2 class ="page-header">{{stationInfos.0.district_name}}</h2>
+	    <div class="col-md-4">
+	      <ul>
+			<li>站址数：{{stationInfos.0.num_stations}}个</li>
+			<li>合同数：{{contractInfos.0.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.0.investment}}元</li>
+			<li>营业额：{{indentIncomes.0.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.0.price}}元</li>
+	      <ul>
+	    </div>
+	    <div class="col-md-8" id="container" style="min-width: 100px; height: 200px; margin: 0 auto"></div>
 	  </div>
+	  <div class ="row">
+  	    <h2 class ="page-header">{{stationInfos.1.district_name}}</h2>
+	    <div class="col-md-12">
+	      <ul>
+			<li>站址数：{{stationInfos.1.num_stations}}个</li>
+			<li>合同数：{{contractInfos.1.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.1.investment}}元</li>
+			<li>营业额：{{indentIncomes.1.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.1.price}}元</li>
+	      <ul>
+	    </div>
+	  </div>
+	  <div class ="row">
+  	    <h2 class ="page-header">{{stationInfos.2.district_name}}</h2>
+	    <div class="col-md-12">
+	      <ul>
+			<li>站址数：{{stationInfos.2.num_stations}}个</li>
+			<li>合同数：{{contractInfos.2.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.2.investment}}元</li>
+			<li>营业额：{{indentIncomes.2.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.2.price}}元</li>
+	      <ul>
+	    </div>
+	  </div>
+	  <div class ="row">
+  	    <h2 class ="page-header">{{stationInfos.3.district_name}}</h2>
+	    <div class="col-md-12">
+	      <ul>
+			<li>站址数：{{stationInfos.3.num_stations}}个</li>
+			<li>合同数：{{contractInfos.3.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.3.investment}}元</li>
+			<li>营业额：{{indentIncomes.3.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.3.price}}元</li>
+	      <ul>
+	    </div>
+	  </div>
+	  <div class ="row">
+  	    <h2 class ="page-header">{{stationInfos.4.district_name}}</h2>
+	    <div class="col-md-12">
+	      <ul>
+			<li>站址数：{{stationInfos.4.num_stations}}个</li>
+			<li>合同数：{{contractInfos.4.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.4.investment}}元</li>
+			<li>营业额：{{indentIncomes.4.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.4.price}}元</li>
+	      <ul>
+	    </div>
+	  </div>
+	  	  <div class ="row">
+  	    <h2 class ="page-header">{{stationInfos.5.district_name}}</h2>
+	    <div class="col-md-12">
+	      <ul>
+			<li>站址数：{{stationInfos.5.num_stations}}个</li>
+			<li>合同数：{{contractInfos.5.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.5.investment}}元</li>
+			<li>营业额：{{indentIncomes.5.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.5.price}}元</li>
+	      <ul>
+	    </div>
+	  </div>
+  	  {% if infos %}
+  	  {% for info in infos %}
+  	  {% endfor %}
+  	  {% endif %}
   {% endblock %}
   
   {% block myscript %}
+  	<script type="text/javascript">
+  	$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Monthly Average Rainfall'
+        },
+        subtitle: {
+            text: 'Source: WorldClimate.com'
+        },
+        xAxis: {
+            categories: [
+                'Jan',
+                'Feb',
+                'Mar',
+                'Apr',
+                'May'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: 'Rainfall (mm)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: 'Tokyo',
+            data: [49.9, 71.5, 106.4, 129.2, 144.0]
+
+        }, {
+            name: 'New York',
+            data: [83.6, 78.8, 98.5, 93.4, 106.0]
+
+        }, {
+            name: 'London',
+            data: [48.9, 38.8, 39.3, 41.4, 47.0]
+
+        }, {
+            name: 'Berlin',
+            data: [42.4, 33.2, 34.5, 39.7, 52.6]
+
+        }]
+    });
+});
+    </script>
   {% endblock %}
 
 

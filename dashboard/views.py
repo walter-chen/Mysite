@@ -1,13 +1,24 @@
 # -*- coding: utf-8 -*-
+from django.db.models.aggregates import Count, Max, Sum
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 
-from dashboard.models import Station, Order, Resource, Property, Indent, Project
+from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
+    District
 
 
 def dashboard(request):
-    station = Station.objects.get(pk=2)
-    return render(request, 'dashboard/dashboard.html', {'station': station})
+    stationInfos = District.objects.annotate(num_stations=Count('station'))
+    contractInfos = District.objects.annotate(num_contracts=Count('property'))
+    investmentAmount = District.objects.annotate(investment=Sum('project__investment_price'))
+    indentIncomes = District.objects.annotate(incomes=Sum('indent__price'))
+    propertyPrice = District.objects.annotate(price=Sum('property__price'))
+    context = {"stationInfos":stationInfos,
+               "contractInfos":contractInfos,
+               "investmentAmount":investmentAmount,
+               "indentIncomes":indentIncomes,
+               "propertyPrice":propertyPrice}
+    return render(request, 'dashboard/dashboard.html', context)
 def login(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
