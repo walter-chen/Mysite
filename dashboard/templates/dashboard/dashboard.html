@@ -4,122 +4,65 @@
     {% load static %}
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
+    <script src="https://code.highcharts.com/highcharts-more.js"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
   {% endblock %}  
   
   {% block content %}
+  
   	  <div class ="row">
-  	    <h2 class ="page-header">{{stationInfos.0.district_name}}</h2>
+  	    <h2 class ="page-header">总体情况</h2>
 	    <div class="col-md-4">
 	      <ul>
-			<li>站址数：{{stationInfos.0.num_stations}}个</li>
-			<li>合同数：{{contractInfos.0.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.0.investment}}元</li>
-			<li>营业额：{{indentIncomes.0.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.0.price}}元</li>
+			<li>站址数：{{stationInfos.0.num_stations|add:stationInfos.1.num_stations|add:stationInfos.2.num_stations|add:stationInfos.3.num_stations|add:stationInfos.4.num_stations|add:stationInfos.5.num_stations}}个</li>
+			<li>合同数：{{contractInfos.0.num_contracts|add:contractInfos.1.num_contracts|add:contractInfos.2.num_contracts|add:contractInfos.3.num_contracts|add:contractInfos.4.num_contracts|add:contractInfos.5.num_contracts}}个</li>
+			<li>投资额：{{investmentAmount.0.investment|add:investmentAmount.1.investment|add:investmentAmount.2.investment|add:investmentAmount.3.investment|add:investmentAmount.4.investment|add:investmentAmount.5.investment}}元</li>
+			<li>营业额：{{indentIncomes.0.incomes|add:indentIncomes.1.incomes|add:indentIncomes.2.incomes|add:indentIncomes.3.incomes|add:indentIncomes.4.incomes|add:indentIncomes.5.incomes}}元</li>
+			<li>合同总金额：{{propertyPrice.0.price|add:propertyPrice.1.price|add:propertyPrice.2.price|add:propertyPrice.3.price|add:propertyPrice.4.price|add:propertyPrice.5.price}}元</li>
 	      <ul>
 	    </div>
-	    <div class="col-md-8" id="container" style="min-width: 100px; height: 200px; margin: 0 auto"></div>
+	    <div class="col-md-8" id="simin-column" style="min-width: 100px; height: 200px; margin: 0 auto"></div>
 	  </div>
 	  <div class ="row">
-  	    <h2 class ="page-header">{{stationInfos.1.district_name}}</h2>
-	    <div class="col-md-12">
-	      <ul>
-			<li>站址数：{{stationInfos.1.num_stations}}个</li>
-			<li>合同数：{{contractInfos.1.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.1.investment}}元</li>
-			<li>营业额：{{indentIncomes.1.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.1.price}}元</li>
-	      <ul>
-	    </div>
+	    <div class="col-md-4" id="simin-semicircle" style="min-width: 200px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+	    <div class="col-md-8" id="spiderweb" style="min-width: 200px; height: 300px; max-width: 600px; margin: 0 auto"></div>
 	  </div>
-	  <div class ="row">
-  	    <h2 class ="page-header">{{stationInfos.2.district_name}}</h2>
-	    <div class="col-md-12">
-	      <ul>
-			<li>站址数：{{stationInfos.2.num_stations}}个</li>
-			<li>合同数：{{contractInfos.2.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.2.investment}}元</li>
-			<li>营业额：{{indentIncomes.2.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.2.price}}元</li>
-	      <ul>
-	    </div>
-	  </div>
-	  <div class ="row">
-  	    <h2 class ="page-header">{{stationInfos.3.district_name}}</h2>
-	    <div class="col-md-12">
-	      <ul>
-			<li>站址数：{{stationInfos.3.num_stations}}个</li>
-			<li>合同数：{{contractInfos.3.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.3.investment}}元</li>
-			<li>营业额：{{indentIncomes.3.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.3.price}}元</li>
-	      <ul>
-	    </div>
-	  </div>
-	  <div class ="row">
-  	    <h2 class ="page-header">{{stationInfos.4.district_name}}</h2>
-	    <div class="col-md-12">
-	      <ul>
-			<li>站址数：{{stationInfos.4.num_stations}}个</li>
-			<li>合同数：{{contractInfos.4.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.4.investment}}元</li>
-			<li>营业额：{{indentIncomes.4.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.4.price}}元</li>
-	      <ul>
-	    </div>
-	  </div>
-	  	  <div class ="row">
-  	    <h2 class ="page-header">{{stationInfos.5.district_name}}</h2>
-	    <div class="col-md-12">
-	      <ul>
-			<li>站址数：{{stationInfos.5.num_stations}}个</li>
-			<li>合同数：{{contractInfos.5.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.5.investment}}元</li>
-			<li>营业额：{{indentIncomes.5.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.5.price}}元</li>
-	      <ul>
-	    </div>
-	  </div>
-  	  {% if infos %}
-  	  {% for info in infos %}
-  	  {% endfor %}
-  	  {% endif %}
   {% endblock %}
   
   {% block myscript %}
   	<script type="text/javascript">
   	$(function () {
-    $('#container').highcharts({
+    $('#simin-column').highcharts({
         chart: {
             type: 'column'
         },
         title: {
-            text: 'Monthly Average Rainfall'
+            text: '各区站址及合同总数'
         },
         subtitle: {
-            text: 'Source: WorldClimate.com'
+            text: '数据来源: 资源系统'
         },
         xAxis: {
             categories: [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May'
+                '{{stationInfos.0.district_name}}',
+                '{{stationInfos.1.district_name}}',
+                '{{stationInfos.2.district_name}}',
+                '{{stationInfos.3.district_name}}',
+                '{{stationInfos.4.district_name}}',
+                '{{stationInfos.5.district_name}}'
             ],
             crosshair: true
         },
         yAxis: {
             min: 0,
             title: {
-                text: 'Rainfall (mm)'
+                text: '数量(个)'
             }
         },
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -131,25 +74,151 @@
             }
         },
         series: [{
-            name: 'Tokyo',
-            data: [49.9, 71.5, 106.4, 129.2, 144.0]
+            name: '站址',
+            data: [{{stationInfos.0.num_stations}},
+            	   {{stationInfos.1.num_stations}},
+            	   {{stationInfos.2.num_stations}},
+            	   {{stationInfos.3.num_stations}},
+            	   {{stationInfos.4.num_stations}},
+            	   {{stationInfos.5.num_stations}}]
 
         }, {
-            name: 'New York',
-            data: [83.6, 78.8, 98.5, 93.4, 106.0]
-
-        }, {
-            name: 'London',
-            data: [48.9, 38.8, 39.3, 41.4, 47.0]
-
-        }, {
-            name: 'Berlin',
-            data: [42.4, 33.2, 34.5, 39.7, 52.6]
+            name: '合同',
+            data: [{{contractInfos.0.num_contracts}},
+            	   {{contractInfos.1.num_contracts}},
+            	   {{contractInfos.2.num_contracts}},
+            	   {{contractInfos.3.num_contracts}},
+            	   {{contractInfos.4.num_contracts}},
+            	   {{contractInfos.5.num_contracts}}]
 
         }]
     });
 });
     </script>
+    <script type="text/javascript">
+      $(function () {
+	    $('#simin-semicircle').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: 0,
+	            plotShadow: false
+	        },
+	        title: {
+	            text: '客户订单额占比',
+	            align: 'center',
+	            verticalAlign: 'middle',
+	            y: 70
+	        },
+	        tooltip: {
+	            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                dataLabels: {
+	                    enabled: true,
+	                    distance: -50,
+	                    style: {
+	                    	fontWeight: 'bold',
+	                        color: 'contrast'
+	                    }
+	                },
+	                startAngle: -90,
+	                endAngle: 90,
+	                center: ['50%', '75%']
+	            }
+	        },
+	        series: [{
+	            type: 'pie',
+	            name: 'Browser share',
+	            innerSize: '50%',
+	            data: [
+	                ['{{simClientOfferMoney.0.client_name}}', {{simClientOfferMoney.0.money}}],
+	                ['{{simClientOfferMoney.1.client_name}}', {{simClientOfferMoney.1.money}}],
+	                ['{{simClientOfferMoney.2.client_name}}', {{simClientOfferMoney.2.money}}],
+	                {
+	                    name: 'Proprietary or Undetectable',
+	                    y: 0.2,
+	                    dataLabels: {
+	                        enabled: false
+	                    }
+	                }
+	            ]
+	        }]
+	    });
+	});
+    </script>
+    <script type="text/javascript">
+    $(function () {
+    $('#spiderweb').highcharts({
+
+        chart: {
+            polar: true,
+            type: 'line'
+        },
+
+        title: {
+            text: '投资额 vs 销售额',
+            x: -80
+        },
+
+        pane: {
+            size: '80%'
+        },
+
+        xAxis: {
+            categories: ['{{stationInfos.0.district_name}}',
+	             			 '{{stationInfos.1.district_name}}',
+	             			 '{{stationInfos.2.district_name}}',
+	             			 '{{stationInfos.3.district_name}}',
+	             			 '{{stationInfos.4.district_name}}',
+	                    	 '{{stationInfos.5.district_name}}'],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+        },
+
+        yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+        },
+
+        tooltip: {
+            shared: true,
+            pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
+        },
+
+        legend: {
+            align: 'right',
+            verticalAlign: 'top',
+            y: 70,
+            layout: 'vertical'
+        },
+
+        series: [{
+            name: '投资额（元）',
+            data: [{{investmentAmount.0.investment|stringformat:'d'}},
+            	   {{investmentAmount.1.investment|stringformat:'d'}},
+            	   {{investmentAmount.2.investment|stringformat:'d'}},
+            	   {{investmentAmount.3.investment|stringformat:'d'}},
+            	   {{investmentAmount.4.investment|stringformat:'d'}},
+            	   {{investmentAmount.5.investment|stringformat:'d'}}],
+            pointPlacement: 'on'
+        }, {
+            name: '收入（元/年）',
+            data: [{{indentIncomes.0.incomes|stringformat:'d'}},
+            	   {{indentIncomes.1.incomes|stringformat:'d'}},
+            	   {{indentIncomes.2.incomes|stringformat:'d'}},
+            	   {{indentIncomes.3.incomes|stringformat:'d'}},
+            	   {{indentIncomes.4.incomes|stringformat:'d'}},
+            	   {{indentIncomes.5.incomes|stringformat:'d'}}],
+            pointPlacement: 'on'
+        }]
+
+    });
+});
+    </script> 
+    
+    
   {% endblock %}
 
 

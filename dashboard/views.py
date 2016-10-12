@@ -4,7 +4,8 @@ from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
 
 from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
-    District
+    District, Client
+from dashboard.utilies import TowerCounter
 
 
 def dashboard(request):
@@ -13,11 +14,15 @@ def dashboard(request):
     investmentAmount = District.objects.annotate(investment=Sum('project__investment_price'))
     indentIncomes = District.objects.annotate(incomes=Sum('indent__price'))
     propertyPrice = District.objects.annotate(price=Sum('property__price'))
+    simiClientOfferMoney = Client.objects.annotate(money=Sum('indent__price')) \
+                .filter(indent__district_id="思明区")
+    
     context = {"stationInfos":stationInfos,
                "contractInfos":contractInfos,
                "investmentAmount":investmentAmount,
                "indentIncomes":indentIncomes,
-               "propertyPrice":propertyPrice}
+               "propertyPrice":propertyPrice,
+                "simClientOfferMoney":simiClientOfferMoney}
     return render(request, 'dashboard/dashboard.html', context)
 def login(request):
     username = request.POST.get('username', '')
@@ -52,7 +57,6 @@ def stationDetails(request, station_code):
     
     if alarmAmount!=0:
         highTemperatureRatio = float(highTemperatureAmount)/alarmAmount
-        
         powerFailureRatio = float(powerFailureAmount)/alarmAmount
         waterLoggingRatio = float(waterLoggingAmount)/alarmAmount
         batteryRatio = float(batteryAmount)/alarmAmount

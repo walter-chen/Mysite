@@ -7,6 +7,9 @@ from django.utils.encoding import smart_unicode
 class District(models.Model):
     district_name = models.CharField(max_length=50, unique=True)
 
+class Client(models.Model):
+    client_name = models.CharField(max_length=100, unique=True, blank=True)
+
 class Station(models.Model):
     station_code = models.CharField(max_length=200, unique=True, blank=False)
     station_name = models.CharField(max_length=300, blank=False)
@@ -48,8 +51,8 @@ class Project(models.Model):
     project_code = models.CharField(max_length=50, unique=True, blank=False)
     district = models.ForeignKey(District, to_field='district_name', on_delete=models.CASCADE)
     construction_type = models.CharField(max_length=200, blank=False)
-    tower_type = models.CharField(max_length=200, blank=False)
-    room_type = models.CharField(max_length=200, blank=False)
+    tower_type = models.CharField(max_length=200, blank=True)
+    room_type = models.CharField(max_length=200, blank=True)
     investment_price = models.DecimalField(max_digits=10, decimal_places=2)
     
 class Indent(models.Model):
@@ -58,9 +61,9 @@ class Indent(models.Model):
     district = models.ForeignKey(District, to_field='district_name', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     indent_status = models.CharField(max_length=100, blank=False)
-    client = models.CharField(max_length=100, blank=False)
+    client = models.ForeignKey(Client, to_field='client_name', on_delete=models.CASCADE)
     start_date = models.DateField()
-    end_date = models.DateField()    
+    end_date = models.DateField()
     
     
     
