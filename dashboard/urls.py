@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from . import views
 
+
 app_name = 'dashboard'
 urlpatterns = [
     url(r'^dashboardbase$', views.dashboardbase, name="dashboardbase"),
@@ -13,7 +14,10 @@ urlpatterns = [
     
     url(r'^loginPage$', views.loginPage, name='loginPage'),
     url(r'^login$', views.login, name='name'),
-    url(r'^$', views.dashboard, name='dashboard')
+    url(r'^$', views.dashboard, name='dashboard'),
+    
+    url(r'^showFlows$', views.showFlows, name='showFlows'),
+    url(r'^viewPDFOnline$', views.viewPDFOnline, name='viewPDFOnline')
 ]
 
 

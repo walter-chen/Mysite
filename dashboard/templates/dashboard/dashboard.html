@@ -129,7 +129,7 @@
 	        },
 	        series: [{
 	            type: 'pie',
-	            name: 'Browser share',
+	            name: '订单金额占比',
 	            innerSize: '50%',
 	            data: [
 	                ['{{simClientOfferMoney.0.client_name}}', {{simClientOfferMoney.0.money}}],
@@ -167,11 +167,11 @@
 
         xAxis: {
             categories: ['{{stationInfos.0.district_name}}',
-	             			 '{{stationInfos.1.district_name}}',
-	             			 '{{stationInfos.2.district_name}}',
-	             			 '{{stationInfos.3.district_name}}',
-	             			 '{{stationInfos.4.district_name}}',
-	                    	 '{{stationInfos.5.district_name}}'],
+             			 '{{stationInfos.1.district_name}}',
+             			 '{{stationInfos.2.district_name}}',
+             			 '{{stationInfos.3.district_name}}',
+             			 '{{stationInfos.4.district_name}}',
+                    	 '{{stationInfos.5.district_name}}'],
             tickmarkPlacement: 'on',
             lineWidth: 0
         },

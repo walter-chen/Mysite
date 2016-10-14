@@ -2,6 +2,7 @@
 from django.db.models.aggregates import Count, Max, Sum
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
+from reportlab.pdfgen import canvas
 
 from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
     District, Client
@@ -96,6 +97,16 @@ def dashboardbase(request):
     return render(request, "dashboard/dashboard-base.html", {'station': station})
 
 
+def showFlows(request):
+    
+    return render(request, "dashboard/dashboard-flow.html", {})
+
+def viewPDFOnline(request):
+    with open('/home/cc/Documents/关于加强站址规范交维管控的通知正文.pdf', 'r') as pdf:
+        response = HttpResponse(pdf.read(), content_type='application/pdf')
+        response['Content-Disposition'] = 'inline;filename=some_file.pdf'
+        return response
+    pdf.closed
 
 
 

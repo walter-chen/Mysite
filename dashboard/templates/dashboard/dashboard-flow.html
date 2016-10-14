@@ -13,26 +13,20 @@
 	  <table class="table table-hover table-bordered results">
 	    <thead>
 	      <tr>
-	        <th class="col-md-4 col-xs-4">站址名称</th>
-	        <th class="col-md-4 col-xs-4">区域</th>
-	        <th class="col-md-4 col-xs-4">详细地址</th>
+	        <th class="col-md-8 col-xs-8">流程名称</th>
+	        <th class="col-md-4 col-xs-4">启用时间</th>
 	      </tr>
 	    </thead>
 	    <tbody>
-	    {% load static %}
-	      {% if stations %}
-	      {% for station in stations %}
-		      <tr>
-		        <td><a href="{% url 'dashboard:stationDetails' station.station_code %}">{{ station.station_name }}</a></td>
-		        <td>{{ station.district_id }}</td>
-		        <td>{{ station.address }}</td>
-		      </tr>
-		   {% endfor %}
-		   {% endif %}
+	      <tr>
+	        <td><a href='/dashboard/viewPDFOnline'>关于加强站址规范交维管控的通知正文</a></td>
+	        <td>2016-07-01</td>
+	      </tr>
 	    </tbody>
 	  </table>
 	</div>
 	
+  
   {% endblock %}
   
   {% block myscript %}
