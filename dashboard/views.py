@@ -108,7 +108,8 @@ def viewPDFOnline(request):
         return response
     pdf.closed
 
-
+def baiduMap(request):
+    return render(request, "dashboard/baiduMap.html",{})
 
 
 

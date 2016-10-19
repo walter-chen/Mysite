@@ -17,7 +17,9 @@ urlpatterns = [
     url(r'^$', views.dashboard, name='dashboard'),
     
     url(r'^showFlows$', views.showFlows, name='showFlows'),
-    url(r'^viewPDFOnline$', views.viewPDFOnline, name='viewPDFOnline')
+    url(r'^viewPDFOnline$', views.viewPDFOnline, name='viewPDFOnline'),
+    
+    url(r'^baiduMap$', views.baiduMap, name='baiduMap')
 ]
 
 

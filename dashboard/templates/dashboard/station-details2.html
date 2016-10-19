@@ -1,7 +1,9 @@
 {% extends "dashboard/dashboard-base.html" %}
   {% block individual %}
 	<link href="http://api.map.baidu.com/library/TrafficControl/1.4/src/TrafficControl_min.css" rel="stylesheet" type="text/css" />
-
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
     {% load static %}
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
@@ -148,22 +150,22 @@
     <script type="text/javascript">
     // 百度地图API功能
     //GPS坐标
-    var x = {{station.longitude}}; 
-    var y = {{station.latitude}};
+    var x = 118.153485;
+    var y = 24.479759;
     var ggPoint = new BMap.Point(x,y);
 
     //地图初始化
     var bm = new BMap.Map("allmap");
-    bm.centerAndZoom(ggPoint, 15);
+    bm.centerAndZoom(ggPoint, 16);
     bm.addControl(new BMap.NavigationControl());
 	bm.enableScrollWheelZoom();
-	
+
     //坐标转换完之后的回调函数
     translateCallback = function (data){
       if(data.status === 0) {
         var marker = new BMap.Marker(data.points[0]);
         bm.addOverlay(marker);
-        var label = new BMap.Label("{{station.station_name}}",{offset:new BMap.Size(20,-10)});
+        var label = new BMap.Label("厦门思明加州城市广场",{offset:new BMap.Size(20,-10)});
         marker.setLabel(label); //添加百度label
        
         var ctrl = new BMapLib.TrafficControl({

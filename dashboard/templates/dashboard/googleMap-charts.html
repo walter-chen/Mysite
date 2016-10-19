@@ -1,7 +1,5 @@
 {% extends "dashboard/dashboard-base.html" %}
   {% block individual %}
-	<link href="http://api.map.baidu.com/library/TrafficControl/1.4/src/TrafficControl_min.css" rel="stylesheet" type="text/css" />
-
     {% load static %}
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
@@ -10,7 +8,7 @@
   {% block content %}
 	  <div class ="row">
 	    <h1 class ="page-header">详情</h1>
-	    <div class ="col-xs-6" id="allmap" style="width: 400px; height: 300px"></div>
+	    <div class ="col-xs-6" id="map_div" style="width: 400px; height: 300px"></div>
 	    <div class="col-xs-6" id="container" style="min-width: 310px; height: 400px; max-width: 600px; margin: 0 auto"></div>
 	  </div>
 	  <div class ="row">
@@ -143,45 +141,23 @@
   {% endblock %}
   
   {% block myscript %}
- 	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=aUoRtZCHgO6B1gqebx0XLGoG9hl2Ghce"></script>
-  	<script type="text/javascript" src="http://api.map.baidu.com/library/TrafficControl/1.4/src/TrafficControl_min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-    // 百度地图API功能
-    //GPS坐标
-    var x = {{station.longitude}}; 
-    var y = {{station.latitude}};
-    var ggPoint = new BMap.Point(x,y);
+      google.charts.load("upcoming", {packages:["map"]});
+      google.charts.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Lat', 'Long', 'Name'],
+          [{{station.latitude}}, {{station.longitude}}, '{{station.station_name}}']
+        ]);
 
-    //地图初始化
-    var bm = new BMap.Map("allmap");
-    bm.centerAndZoom(ggPoint, 15);
-    bm.addControl(new BMap.NavigationControl());
-	bm.enableScrollWheelZoom();
-	
-    //坐标转换完之后的回调函数
-    translateCallback = function (data){
-      if(data.status === 0) {
-        var marker = new BMap.Marker(data.points[0]);
-        bm.addOverlay(marker);
-        var label = new BMap.Label("{{station.station_name}}",{offset:new BMap.Size(20,-10)});
-        marker.setLabel(label); //添加百度label
-       
-        var ctrl = new BMapLib.TrafficControl({
-			showPanel: false //是否显示路况提示面板
-		});      
-		bm.addControl(ctrl);
-		ctrl.setAnchor(BMAP_ANCHOR_BOTTOM_RIGHT);  
-      }
-    }
-
-    
-    setTimeout(function(){
-        var convertor = new BMap.Convertor();
-        var pointArr = [];
-        pointArr.push(ggPoint);
-        convertor.translate(pointArr, 1, 5, translateCallback)
-    }, 1000);
-</script>
+        var map = new google.visualization.Map(document.getElementById('map_div'));
+        map.draw(data, {
+          showTooltip: true,
+          showInfoWindow: true
+        });
+      }   
+    </script>
 	<script type="text/javascript">
 	      $(function () {
 		    $('#container').highcharts({
