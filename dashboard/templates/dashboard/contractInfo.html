@@ -97,7 +97,7 @@
 	        tooltip: {
 	            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
 	            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-	                '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
+	                '<td style="padding:0"><b>{point.y:.0f} 个</b></td></tr>',
 	            footerFormat: '</table>',
 	            shared: true,
 	            useHTML: true
@@ -109,97 +109,97 @@
 	            }
 	        },
 	        series: [{
-	            name: '思明',
-	            data: [
-	            	   {{contracts_Jan.0.contract_amount}},
-	            	   {{contracts_Feb.0.contract_amount}},
-	            	   {{contracts_Mar.0.contract_amount}},
-	            	   {{contracts_Apr.0.contract_amount}},
-	            	   {{contracts_May.0.contract_amount}},
-	            	   {{contracts_Jun.0.contract_amount}},
-	            	   {{contracts_Jul.0.contract_amount}},
-	            	   {{contracts_Aug.0.contract_amount}},
-	            	   {{contracts_Sep.0.contract_amount}},
-	            	   {{contracts_Oct.0.contract_amount}},
-	            	   {{contracts_Nov.0.contract_amount}},
-	            	   {{contracts_Dec.0.contract_amount}}
-	            	   ]
-	        }, {
-	            name: '{{contracts_Jan.1.district_name}}',
-	            data: [{{contracts_Jan.1.contract_amount}},
-	            	   {{contracts_Feb.1.contract_amount}},
-	            	   {{contracts_Mar.1.contract_amount}},
-	            	   {{contracts_Apr.1.contract_amount}},
-	            	   {{contracts_May.1.contract_amount}},
-	            	   {{contracts_Jun.1.contract_amount}},
-	            	   {{contracts_Jul.1.contract_amount}},
-	            	   {{contracts_Aug.1.contract_amount}},
-	            	   {{contracts_Sep.1.contract_amount}},
-	            	   {{contracts_Oct.1.contract_amount}},
-	            	   {{contracts_Nov.1.contract_amount}},
-	            	   {{contracts_Dec.1.contract_amount}}
-	            	   ]
-	        }, {
-	        	name: '{{contracts_Jan.2.district_name}}',
-	            data: [{{contracts_Jan.2.contract_amount}},
-	            	   {{contracts_Feb.2.contract_amount}},
-	            	   {{contracts_Mar.2.contract_amount}},
-	            	   {{contracts_Apr.2.contract_amount}},
-	            	   {{contracts_May.2.contract_amount}},
-	            	   {{contracts_Jun.2.contract_amount}},
-	            	   {{contracts_Jul.2.contract_amount}},
-	            	   {{contracts_Aug.2.contract_amount}},
-	            	   {{contracts_Sep.2.contract_amount}},
-	            	   {{contracts_Oct.2.contract_amount}},
-	            	   {{contracts_Nov.2.contract_amount}},
-	            	   {{contracts_Dec.2.contract_amount}}
-	            	   ]
-	        }, {
-	        	name: '{{contracts_Jan.3.district_name}}',
-	            data: [{{contracts_Jan.3.contract_amount}},
-	            	   {{contracts_Feb.3.contract_amount}},
-	            	   {{contracts_Mar.3.contract_amount}},
-	            	   {{contracts_Apr.3.contract_amount}},
-	            	   {{contracts_May.3.contract_amount}},
-	            	   {{contracts_Jun.3.contract_amount}},
-	            	   {{contracts_Jul.3.contract_amount}},
-	            	   {{contracts_Aug.3.contract_amount}},
-	            	   {{contracts_Sep.3.contract_amount}},
-	            	   {{contracts_Oct.3.contract_amount}},
-	            	   {{contracts_Nov.3.contract_amount}},
-	            	   {{contracts_Dec.3.contract_amount}}
-	            	   ]
-	        }, {
-	        	name: '{{contracts_Jan.4.district_name}}',
-	            data: [{{contracts_Jan.4.contract_amount}},
-	            	   {{contracts_Feb.4.contract_amount}},
-	            	   {{contracts_Mar.4.contract_amount}},
-	            	   {{contracts_Apr.4.contract_amount}},
-	            	   {{contracts_May.4.contract_amount}},
-	            	   {{contracts_Jun.4.contract_amount}},
-	            	   {{contracts_Jul.4.contract_amount}},
-	            	   {{contracts_Aug.4.contract_amount}},
-	            	   {{contracts_Sep.4.contract_amount}},
-	            	   {{contracts_Oct.4.contract_amount}},
-	            	   {{contracts_Nov.4.contract_amount}},
-	            	   {{contracts_Dec.4.contract_amount}}
-	            	   ]
-	        }, {
-	        	name: '{{contracts_Jan.5.district_name}}',
-	            data: [{{contracts_Jan.5.contract_amount}},
-	            	   {{contracts_Feb.5.contract_amount}},
-	            	   {{contracts_Mar.5.contract_amount}},
-	            	   {{contracts_Apr.5.contract_amount}},
-	            	   {{contracts_May.5.contract_amount}},
-	            	   {{contracts_Jun.5.contract_amount}},
-	            	   {{contracts_Jul.5.contract_amount}},
-	            	   {{contracts_Aug.5.contract_amount}},
-	            	   {{contracts_Sep.5.contract_amount}},
-	            	   {{contracts_Oct.5.contract_amount}},
-	            	   {{contracts_Nov.5.contract_amount}},
-	            	   {{contracts_Dec.5.contract_amount}}
-	            	   ]
-	        }]
+	            name: '{{DISTRICT_LIST.0}}',
+	            data: [{{columnData.0.0}},
+	            	   {{columnData.0.1}},
+	            	   {{columnData.0.2}},
+	            	   {{columnData.0.3}},
+	            	   {{columnData.0.4}},
+	            	   {{columnData.0.5}},
+	            	   {{columnData.0.6}},
+	            	   {{columnData.0.7}},
+	            	   {{columnData.0.8}},
+	            	   {{columnData.0.9}},
+	            	   {{columnData.0.10}},
+	            	   {{columnData.0.11}},
+	            	  ]
+	        	},{
+	        	name: '{{DISTRICT_LIST.1}}',
+	            data: [{{columnData.1.0}},
+	            	   {{columnData.1.1}},
+	            	   {{columnData.1.2}},
+	            	   {{columnData.1.3}},
+	            	   {{columnData.1.4}},
+	            	   {{columnData.1.5}},
+	            	   {{columnData.1.6}},
+	            	   {{columnData.1.7}},
+	            	   {{columnData.1.8}},
+	            	   {{columnData.1.9}},
+	            	   {{columnData.1.10}},
+	            	   {{columnData.1.11}},
+	            	  ]
+	        	},{
+	        	name: '{{DISTRICT_LIST.2}}',
+	            data: [{{columnData.2.0}},
+	            	   {{columnData.2.1}},
+	            	   {{columnData.2.2}},
+	            	   {{columnData.2.3}},
+	            	   {{columnData.2.4}},
+	            	   {{columnData.2.5}},
+	            	   {{columnData.2.6}},
+	            	   {{columnData.2.7}},
+	            	   {{columnData.2.8}},
+	            	   {{columnData.2.9}},
+	            	   {{columnData.2.10}},
+	            	   {{columnData.2.11}},
+	            	  ]
+	        	},{
+	        	name: '{{DISTRICT_LIST.3}}',
+	            data: [{{columnData.3.0}},
+	            	   {{columnData.3.1}},
+	            	   {{columnData.3.2}},
+	            	   {{columnData.3.3}},
+	            	   {{columnData.3.4}},
+	            	   {{columnData.3.5}},
+	            	   {{columnData.3.6}},
+	            	   {{columnData.3.7}},
+	            	   {{columnData.3.8}},
+	            	   {{columnData.3.9}},
+	            	   {{columnData.3.10}},
+	            	   {{columnData.3.11}},
+	            	  ]
+	        	},{
+	        	name: '{{DISTRICT_LIST.4}}',
+	            data: [{{columnData.4.0}},
+	            	   {{columnData.4.1}},
+	            	   {{columnData.4.2}},
+	            	   {{columnData.4.3}},
+	            	   {{columnData.4.4}},
+	            	   {{columnData.4.5}},
+	            	   {{columnData.4.6}},
+	            	   {{columnData.4.7}},
+	            	   {{columnData.4.8}},
+	            	   {{columnData.4.9}},
+	            	   {{columnData.4.10}},
+	            	   {{columnData.4.11}},
+	            	  ]
+	        	},{
+	        	name: '{{DISTRICT_LIST.5}}',
+	            data: [{{columnData.5.0}},
+	            	   {{columnData.5.1}},
+	            	   {{columnData.5.2}},
+	            	   {{columnData.5.3}},
+	            	   {{columnData.5.4}},
+	            	   {{columnData.5.5}},
+	            	   {{columnData.5.6}},
+	            	   {{columnData.5.7}},
+	            	   {{columnData.5.8}},
+	            	   {{columnData.5.9}},
+	            	   {{columnData.5.10}},
+	            	   {{columnData.5.11}},
+	            	  ]
+	        	},
+	        ]
 	    });
 	});
     </script>

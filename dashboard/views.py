@@ -111,48 +111,20 @@ def baiduMap(request):
 def contractInfo(request):
     ISOTIMEFORMAT='%Y'
     YEAR = time.strftime( ISOTIMEFORMAT, time.localtime( time.time() ) )
+    DISTRICT_LIST = ['思明区','海沧区','湖里区','翔安区','集美区','同安区']
+    MONTH_BEGIN_LIST = ['01-01','02-01','03-01','04-01','05-01','06-01','07-01','08-01','09-01','10-01','11-01','12-01']
+    MONTH_END_LIST = ['01-31','02-28','03-31','04-30','05-31','06-30','07-31','08-31','09-30','10-31','11-30','12-31']
+    columnData = [[],[],[],[],[],[]]
     
-    contracts_Jan = District.objects.filter(property__end_date__gte=YEAR+'-01-01', property__end_date__lte=YEAR+'-01-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Feb = District.objects.filter(property__end_date__gte=YEAR+'-02-01', property__end_date__lte=YEAR+'-02-28')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Mar = District.objects.filter(property__end_date__gte=YEAR+'-03-01', property__end_date__lte=YEAR+'-03-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Apr = District.objects.filter(property__end_date__gte=YEAR+'-04-01', property__end_date__lte=YEAR+'-04-30')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_May = District.objects.filter(property__end_date__gte=YEAR+'-05-01', property__end_date__lte=YEAR+'-05-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Jun = District.objects.filter(property__end_date__gte=YEAR+'-06-01', property__end_date__lte=YEAR+'-06-30')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Jul = District.objects.filter(property__end_date__gte=YEAR+'-07-01', property__end_date__lte=YEAR+'-07-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Aug = District.objects.filter(property__end_date__gte=YEAR+'-08-01', property__end_date__lte=YEAR+'-08-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Sep = District.objects.filter(property__end_date__gte=YEAR+'-09-01', property__end_date__lte=YEAR+'-09-30')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Oct = District.objects.filter(property__end_date__gte=YEAR+'-10-01', property__end_date__lte=YEAR+'-10-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Nov = District.objects.filter(property__end_date__gte=YEAR+'-11-01', property__end_date__lte=YEAR+'-11-30')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
-    contracts_Dec = District.objects.filter(property__end_date__gte=YEAR+'-12-01', property__end_date__lte=YEAR+'-12-31')\
-                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    for i in [0,1,2,3,4,5]:
+        for j in [0,1,2,3,4,5,6,7,8,9,10,11]:
+            columnData[i].append(Property.objects.filter(district_id=DISTRICT_LIST[i], end_date__gte=YEAR+"-"+MONTH_BEGIN_LIST[j], end_date__lte=YEAR+"-"+MONTH_END_LIST[j]).count())
+    propertys = Property.objects.filter(end_date__gte=YEAR+"-01-01", end_date__lte=YEAR+"-12-31")
     
-    len = list(contracts_Jan).__len__()
-    
-    context = {'contracts_Jan':contracts_Jan,
-               'contracts_Feb':contracts_Feb,
-               'contracts_Mar':contracts_Mar,
-               'contracts_Apr':contracts_Apr,
-               'contracts_May':contracts_May,
-               'contracts_Jun':contracts_Jun,
-               'contracts_Jul':contracts_Jul,
-               'contracts_Aug':contracts_Aug,
-               'contracts_Sep':contracts_Sep,
-               'contracts_Oct':contracts_Oct,
-               'contracts_Nov':contracts_Nov,
-               'contracts_Dec':contracts_Dec,
-               'propertys':Property.objects.all(),
-               'len':len
+    context = {
+               'DISTRICT_LIST':DISTRICT_LIST,
+               'columnData':columnData,
+               'propertys':propertys
                }
         
     return render(request, "dashboard/contractInfo.html", context)
