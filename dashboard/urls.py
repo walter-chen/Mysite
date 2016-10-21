@@ -19,7 +19,9 @@ urlpatterns = [
     url(r'^showFlows$', views.showFlows, name='showFlows'),
     url(r'^viewPDFOnline$', views.viewPDFOnline, name='viewPDFOnline'),
     
-    url(r'^baiduMap$', views.baiduMap, name='baiduMap')
+    url(r'^baiduMap$', views.baiduMap, name='baiduMap'),
+    
+    url(r'^contractInfo$', views.contractInfo, name='contractInfo')
 ]
 
 

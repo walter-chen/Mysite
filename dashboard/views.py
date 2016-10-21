@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import time
+
 from django.db.models.aggregates import Count, Max, Sum
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
@@ -28,9 +30,9 @@ def dashboard(request):
 def login(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    return HttpResponse(username + "fsdf"+ password)
+    return HttpResponseRedirect("/dashboard/testForm")
 def loginPage(request):
-    return render(request, 'dashboard/signin.html', [])
+    return render(request, 'dashboard/loginPage.html', {})
 
 
 def testForm(request):
@@ -82,10 +84,6 @@ def stationDetails(request, station_code):
                    
     return render(request, 'dashboard/station-details.html', context)
 
-
-
-
-
 def getValueFromForm(request):
     provider = request.POST.get('checkboxes1', '')
     provider += request.POST.get('checkboxes2', '')
@@ -95,7 +93,6 @@ def getValueFromForm(request):
 def dashboardbase(request):
     station = Station.objects.get(pk=1)
     return render(request, "dashboard/dashboard-base.html", {'station': station})
-
 
 def showFlows(request):
     
@@ -111,7 +108,55 @@ def viewPDFOnline(request):
 def baiduMap(request):
     return render(request, "dashboard/baiduMap.html",{})
 
-
+def contractInfo(request):
+    ISOTIMEFORMAT='%Y'
+    YEAR = time.strftime( ISOTIMEFORMAT, time.localtime( time.time() ) )
+    
+    contracts_Jan = District.objects.filter(property__end_date__gte=YEAR+'-01-01', property__end_date__lte=YEAR+'-01-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Feb = District.objects.filter(property__end_date__gte=YEAR+'-02-01', property__end_date__lte=YEAR+'-02-28')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Mar = District.objects.filter(property__end_date__gte=YEAR+'-03-01', property__end_date__lte=YEAR+'-03-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Apr = District.objects.filter(property__end_date__gte=YEAR+'-04-01', property__end_date__lte=YEAR+'-04-30')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_May = District.objects.filter(property__end_date__gte=YEAR+'-05-01', property__end_date__lte=YEAR+'-05-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Jun = District.objects.filter(property__end_date__gte=YEAR+'-06-01', property__end_date__lte=YEAR+'-06-30')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Jul = District.objects.filter(property__end_date__gte=YEAR+'-07-01', property__end_date__lte=YEAR+'-07-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Aug = District.objects.filter(property__end_date__gte=YEAR+'-08-01', property__end_date__lte=YEAR+'-08-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Sep = District.objects.filter(property__end_date__gte=YEAR+'-09-01', property__end_date__lte=YEAR+'-09-30')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Oct = District.objects.filter(property__end_date__gte=YEAR+'-10-01', property__end_date__lte=YEAR+'-10-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Nov = District.objects.filter(property__end_date__gte=YEAR+'-11-01', property__end_date__lte=YEAR+'-11-30')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    contracts_Dec = District.objects.filter(property__end_date__gte=YEAR+'-12-01', property__end_date__lte=YEAR+'-12-31')\
+                .annotate(contract_amount=Count('property',default=0)).order_by('seq')
+    
+    len = list(contracts_Jan).__len__()
+    
+    context = {'contracts_Jan':contracts_Jan,
+               'contracts_Feb':contracts_Feb,
+               'contracts_Mar':contracts_Mar,
+               'contracts_Apr':contracts_Apr,
+               'contracts_May':contracts_May,
+               'contracts_Jun':contracts_Jun,
+               'contracts_Jul':contracts_Jul,
+               'contracts_Aug':contracts_Aug,
+               'contracts_Sep':contracts_Sep,
+               'contracts_Oct':contracts_Oct,
+               'contracts_Nov':contracts_Nov,
+               'contracts_Dec':contracts_Dec,
+               'propertys':Property.objects.all(),
+               'len':len
+               }
+        
+    return render(request, "dashboard/contractInfo.html", context)
+    
 
 
 

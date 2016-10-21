@@ -21,10 +21,10 @@
 			<li>合同总金额：{{propertyPrice.0.price|add:propertyPrice.1.price|add:propertyPrice.2.price|add:propertyPrice.3.price|add:propertyPrice.4.price|add:propertyPrice.5.price}}元</li>
 	      <ul>
 	    </div>
-	    <div class="col-md-8" id="simin-column" style="min-width: 100px; height: 200px; margin: 0 auto"></div>
+	    <div class="col-md-8" id="columnMap" style="min-width: 100px; height: 200px; margin: 0 auto"></div>
 	  </div>
 	  <div class ="row">
-	    <div class="col-md-4" id="simin-semicircle" style="min-width: 200px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+	    <div class="col-md-4" id="semicircle" style="min-width: 200px; height: 300px; max-width: 600px; margin: 0 auto"></div>
 	    <div class="col-md-8" id="spiderweb" style="min-width: 200px; height: 300px; max-width: 600px; margin: 0 auto"></div>
 	  </div>
   {% endblock %}
@@ -32,7 +32,7 @@
   {% block myscript %}
   	<script type="text/javascript">
   	$(function () {
-    $('#simin-column').highcharts({
+    $('#columnMap').highcharts({
         chart: {
             type: 'column'
         },
@@ -97,7 +97,7 @@
     </script>
     <script type="text/javascript">
       $(function () {
-	    $('#simin-semicircle').highcharts({
+	    $('#semicircle').highcharts({
 	        chart: {
 	            plotBackgroundColor: null,
 	            plotBorderWidth: 0,

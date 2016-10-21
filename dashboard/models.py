@@ -6,6 +6,7 @@ from django.utils.encoding import smart_unicode
 
 class District(models.Model):
     district_name = models.CharField(max_length=50, primary_key=True)
+    seq = models.IntegerField()
 
 class Client(models.Model):
     client_name = models.CharField(max_length=100, primary_key=True, blank=True)
@@ -33,7 +34,8 @@ class Property(models.Model):
     station_code =  models.ForeignKey(Station, to_field='station_code', on_delete=models.CASCADE)
     contract_code = models.CharField(max_length=200, blank=False, primary_key=True)
     district = models.ForeignKey(District, to_field='district_name', on_delete=models.CASCADE)
-    price = models.DecimalField(max_digits=9,decimal_places=2)
+    price = models.DecimalField(max_digits=9, decimal_places=2)
+    price_per_year = models.DecimalField(max_digits=9, decimal_places=2, blank=False)
     contract_type = models.CharField(max_length=200)
     start_date = models.DateField(blank=False)
     end_date = models.DateField(blank=False)
