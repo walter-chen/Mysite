@@ -35,8 +35,7 @@
     <![endif]-->
     
     {% block individual %}{% endblock %}
-
-
+	
   </head>
 
   <body>
@@ -57,10 +56,11 @@
 
     <div class="container-fluid">
       <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
+        <div class="col-sm-3 col-md-2 sidebar" id="LeftBarMenu">
+          <ul class="nav nav-sidebar" id="expandList">
             <li class="active"><a href="http://192.168.84.130:8000/dashboard">厦门市总览 <span class="sr-only">(current)</span></a></li>
-            <li><a href="http://192.168.84.130:8000/dashboard/testForm">站址详情</a></li>
+            <li><a href="http://192.168.84.130:8000/dashboard/singleStationAccount">单站核算</a></li>
+            <li><a href="http://192.168.84.130:8000/dashboard/stationDetailSearch">站址详情</a></li>
             <li><a href="http://192.168.84.130:8000/dashboard/showFlows">铁塔业务流程</a></li>
             <li><a href="http://192.168.84.130:8000/dashboard/contractInfo">合同续签（租金电费）</a></li>
           </ul>
@@ -74,5 +74,7 @@
     
     {% block myscript %}{% endblock %}
 	
+	
+
     </body>
 </html>

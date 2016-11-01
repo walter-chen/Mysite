@@ -5,8 +5,21 @@
   {% block content %}
 	<div class="col-md-12 col-sm-8  col-xs-12">
 	  <div class="form-group pull-left">
-	  	<form action="/dashboard/stationDetailSearchResult" method="get">
-	      <input name="keyword" type="text" class="search form-control" placeholder="输入关键词...">
+	  	<form action="/dashboard/singleStationAccountResult" method="post">
+	  	{% csrf_token %}
+	  	    <div class="col-md-7">
+	          <select id="selectbasic" name="selectbasic" class="search form-control">
+		  			<option value="思明">思明</option>
+		  			<option value="海沧">海沧</option>
+		  			<option value="湖里">湖里</option>
+		  			<option value="翔安">翔安</option>
+		  			<option value="集美">集美</option>
+		  			<option value="同安">同安</option>
+			  </select>
+			</div>
+			<div class="col-md-5">
+				<button type="submit" class="btn btn-primary">提交</button>
+			</div>
 	    </form>
 	  </div>
 	  <span class="counter pull-right"></span>

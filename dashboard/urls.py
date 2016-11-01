@@ -7,9 +7,8 @@ app_name = 'dashboard'
 urlpatterns = [
     url(r'^dashboardbase$', views.dashboardbase, name="dashboardbase"),
     url(r'^getValueFromForm$', views.getValueFromForm, name='getValueFromForm'),
-    url(r'^testForm$', views.testForm, name='testForm'),
-    url(r'^testFormResult$', views.testFormResult, name='testFormResult'),
-    
+    url(r'^stationDetailSearch$', views.stationDetailSearch, name='stationDetailSearch'),
+    url(r'^stationDetailSearchResult$', views.stationDetailSearchResult, name='stationDetailSearchResult'),    
     url(r'^stationDetails/([0-9]+)$', views.stationDetails, name='stationDetails'),
     
     url(r'^loginPage$', views.loginPage, name='loginPage'),
@@ -18,6 +17,9 @@ urlpatterns = [
     
     url(r'^showFlows$', views.showFlows, name='showFlows'),
     url(r'^viewPDFOnline$', views.viewPDFOnline, name='viewPDFOnline'),
+    
+    url(r'^singleStationAccount$', views.singleStationAccount, name='singleStationAccount'),
+    url(r'^singleStationAccountResult$', views.singleStationAccountResult, name='singleStationAccountResult'),
     
     url(r'^baiduMap$', views.baiduMap, name='baiduMap'),
     

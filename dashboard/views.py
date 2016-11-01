@@ -30,14 +30,14 @@ def dashboard(request):
 def login(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    return HttpResponseRedirect("/dashboard/testForm")
+    return HttpResponseRedirect("/dashboard/stationDetailSearch")
 def loginPage(request):
     return render(request, 'dashboard/loginPage.html', {})
 
 
-def testForm(request):
+def stationDetailSearch(request):
     return render(request, 'dashboard/dashboard-search.html', {})
-def testFormResult(request):
+def stationDetailSearchResult(request):
     keyword = request.GET.get('keyword', '')
     stations = list(Station.objects.filter(station_name__contains=keyword))
     return render(request, 'dashboard/dashboard-search.html', {'stations':stations})
@@ -129,7 +129,8 @@ def contractInfo(request):
         
     return render(request, "dashboard/contractInfo.html", context)
     
-
-
-
-
+def singleStationAccount(request):
+    return render(request, "dashboard/dashboard-singleStationAccount.html", {})
+def singleStationAccountResult(request):
+    provider = request.POST.get('selectbasic', '')
+    return HttpResponse(provider)
