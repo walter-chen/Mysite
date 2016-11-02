@@ -1,28 +1,43 @@
 {% extends "dashboard/dashboard-base.html" %}
   {% block individual %}
+  	{% load static %}
+  	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
+	<script src="https://code.highcharts.com/modules/exporting.js"></script>
   {% endblock %}  
   
   {% block content %}
 	<div class="col-md-12 col-sm-8  col-xs-12">
-	  <div class="form-group pull-left">
-	  	<form action="/dashboard/singleStationAccountResult" method="post">
-	  	{% csrf_token %}
-	  	    <div class="col-md-7">
-	          <select id="selectbasic" name="selectbasic" class="search form-control">
-		  			<option value="思明">思明</option>
-		  			<option value="海沧">海沧</option>
-		  			<option value="湖里">湖里</option>
-		  			<option value="翔安">翔安</option>
-		  			<option value="集美">集美</option>
-		  			<option value="同安">同安</option>
-			  </select>
-			</div>
-			<div class="col-md-5">
-				<button type="submit" class="btn btn-primary">提交</button>
-			</div>
-	    </form>
-	  </div>
+		<div class="row">
+		  <div class="form-group pull-left">
+		  	<form action="/dashboard/singleStationAccountResult" method="post">
+		  	{% csrf_token %}
+		  	    <div class="col-md-7">
+		          <select id="selectbasic" name="selectbasic" class="search form-control">
+		          		<option value=" "> </option>
+			  			<option value="思明">思明</option>
+			  			<option value="海沧">海沧</option>
+			  			<option value="湖里">湖里</option>
+			  			<option value="翔安">翔安</option>
+			  			<option value="集美">集美</option>
+			  			<option value="同安">同安</option>
+				  </select>
+				</div>
+				<div class="col-md-5">
+					<button type="submit" class="btn btn-primary">提交</button>
+				</div>
+		    </form>
+		  </div>
+		</div>
 	  <span class="counter pull-right"></span>
+
+	  <div class ="row">
+	    <div class ="col-xs-12" id="NegtiveStackBar" style="width: 600px; height: 360px"></div>
+	  </div>
+
+
+
+
 	  <table class="table table-hover table-bordered results">
 	    <thead>
 	      <tr>
@@ -44,11 +59,80 @@
 		   {% endif %}
 	    </tbody>
 	  </table>
-	</div>
-	
+	</div>	
   {% endblock %}
   
   {% block myscript %}
+     <script type="text/javascript">
+     	$(function () {
+		    // Age categories
+		    var categories = ['0-1', '1-2', '2-3', '3-4',
+		            '4-5', '5-6', '6-7', '7-8', '8-9',
+		            '9-10', '10-11', '11+'];
+		    $(document).ready(function () {
+		        Highcharts.chart('NegtiveStackBar', {
+		            chart: {
+		                type: 'bar'
+		            },
+		            title: {
+		                text: '站点利润率分布(2016.10)'
+		            },
+		            subtitle: {
+		                text: 'Source: <a href="http://populationpyramid.net/germany/2015/">Population Pyramids of the World from 1950 to 2100</a>'
+		            },
+		            xAxis: [{
+		                categories: categories,
+		                reversed: false,
+		                labels: {
+		                    step: 1
+		                }
+		            }, { // mirror axis on right side
+		                opposite: true,
+		                reversed: false,
+		                categories: categories,
+		                linkedTo: 0,
+		                labels: {
+		                    step: 1
+		                }
+		            }],
+		            yAxis: {
+		                title: {
+		                    text: null
+		                },
+		                labels: {
+		                    formatter: function () {
+		                        return Math.abs(this.value) + '%';
+		                    }
+		                }
+		            },
+
+		            plotOptions: {
+		                series: {
+		                    stacking: 'normal'
+		                }
+		            },
+
+		            tooltip: {
+		                formatter: function () {
+		                    return '<b>' + this.series.name + ', 比率 ' + this.point.category + '</b><br/>' +
+		                        '站点数: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+		                }
+		            },
+
+		            series: [{
+		                name: '亏损',
+		                data: [-2.2, -2.2, -2.3, -2.5, -2.7, -3.1, -3.2,
+		                    -3.0, -3.2, -4.3]
+		            }, {
+		                name: '盈利',
+		                data: [2.1, 2.0, 2.2, 2.4, 2.6, 3.0, 3.1, 2.9,
+		                    3.1, 4.1, 4.3, 3.6]
+		            }]
+		        });
+		    });
+
+		});
+     </script>
   {% endblock %}
 
 

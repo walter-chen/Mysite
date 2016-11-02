@@ -6,7 +6,6 @@ from django.utils.encoding import smart_unicode
 
 class District(models.Model):
     district_name = models.CharField(max_length=50, primary_key=True)
-    seq = models.IntegerField()
 
 class Client(models.Model):
     client_name = models.CharField(max_length=100, primary_key=True, blank=True)
@@ -66,6 +65,32 @@ class Indent(models.Model):
     client = models.ForeignKey(Client, to_field='client_name', on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
+    
+class AssetSource(models.Model):
+    source = models.CharField(max_length=50, primary_key=True)
+
+class CoverageScene(models.Model):
+    type = models.CharField(max_length=100, primary_key=True)
+
+class StationAccounting(models.Model):
+    station_code = models.ForeignKey(Station, to_field='station_code', on_delete=models.CASCADE)
+    station_name = models.CharField(max_length=255, blank=False)
+    fetch_data_date = models.DateField(blank=False)  #last day of month
+    district = models.ForeignKey(District, to_field='district_name', on_delete=models.CASCADE)
+    source = models.ForeignKey(AssetSource, to_field='source', on_delete=models.CASCADE)
+    tower_type = models.CharField(max_length=300)
+    coverage_scene = models.ForeignKey(CoverageScene, to_field='type', on_delete=models.CASCADE)
+    profit_rate = models.DecimalField(max_digits=10, decimal_places=2)
+    profit = models.DecimalField(max_digits=10, decimal_places=2)
+    
+    class Meta:
+        unique_together = ('station_name', 'fetch_data_date')  
+      
+    def __unicode__(self):  
+        return '%s,%d'%(self.station_name,self.fetch_data_date)
+    
+    
+    
     
     
     

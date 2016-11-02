@@ -134,3 +134,10 @@ def singleStationAccount(request):
 def singleStationAccountResult(request):
     provider = request.POST.get('selectbasic', '')
     return HttpResponse(provider)
+
+
+
+
+
+
+
