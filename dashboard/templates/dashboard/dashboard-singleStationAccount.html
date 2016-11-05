@@ -1,7 +1,7 @@
 {% extends "dashboard/dashboard-base.html" %}
   {% block individual %}
   	{% load static %}
-  	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
     <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
 	<script src="https://code.highcharts.com/modules/exporting.js"></script>
   {% endblock %}  
@@ -9,21 +9,24 @@
   {% block content %}
 	<div class="col-md-12 col-sm-8  col-xs-12">
 		<div class="row">
-		  <div class="form-group pull-left">
+		  <div class="form-group pull-center">
 		  	<form action="/dashboard/singleStationAccountResult" method="post">
 		  	{% csrf_token %}
-		  	    <div class="col-md-7">
+		  	    <div class="col-md-2">
 		          <select id="selectbasic" name="selectbasic" class="search form-control">
-		          		<option value=" "> </option>
-			  			<option value="思明">思明</option>
-			  			<option value="海沧">海沧</option>
-			  			<option value="湖里">湖里</option>
-			  			<option value="翔安">翔安</option>
-			  			<option value="集美">集美</option>
-			  			<option value="同安">同安</option>
+		          		<option selected="selected" value="{{district}}">{{district}}</option>
+			  			<option value="思明区">思明区</option>
+			  			<option value="海沧区">海沧区</option>
+			  			<option value="湖里区">湖里区</option>
+			  			<option value="翔安区">翔安区</option>
+			  			<option value="集美区">集美区</option>
+			  			<option value="同安区">同安区</option>
 				  </select>
 				</div>
-				<div class="col-md-5">
+				<div class="col-md-2">
+					<input id="month" name="month" type="month" class="form-control" value="{{month}}"/>
+				</div>
+				<div class="col-md-8">
 					<button type="submit" class="btn btn-primary">提交</button>
 				</div>
 		    </form>
@@ -32,11 +35,8 @@
 	  <span class="counter pull-right"></span>
 
 	  <div class ="row">
-	    <div class ="col-xs-12" id="NegtiveStackBar" style="width: 600px; height: 360px"></div>
+	    <div class ="col-xs-12" id="NegativeStackBar" style="width: 600px; height: 360px"></div>
 	  </div>
-
-
-
 
 	  <table class="table table-hover table-bordered results">
 	    <thead>
@@ -68,17 +68,17 @@
 		    // Age categories
 		    var categories = ['0-1', '1-2', '2-3', '3-4',
 		            '4-5', '5-6', '6-7', '7-8', '8-9',
-		            '9-10', '10-11', '11+'];
+		            '9-10', '10-11', '11+',];
 		    $(document).ready(function () {
-		        Highcharts.chart('NegtiveStackBar', {
+		        Highcharts.chart('NegativeStackBar', {
 		            chart: {
 		                type: 'bar'
 		            },
 		            title: {
-		                text: '站点利润率分布(2016.10)'
+		                text: '{{district}}站点利润率分布({{month}})'
 		            },
 		            subtitle: {
-		                text: 'Source: <a href="http://populationpyramid.net/germany/2015/">Population Pyramids of the World from 1950 to 2100</a>'
+		                text: '数据源：<a href="http://123.126.34.161/default/coframe/tools/skins/jyfx/index.jsp">铁塔OA经营分析系统</a>'
 		            },
 		            xAxis: [{
 		                categories: categories,
@@ -115,18 +115,30 @@
 		            tooltip: {
 		                formatter: function () {
 		                    return '<b>' + this.series.name + ', 比率 ' + this.point.category + '</b><br/>' +
-		                        '站点数: ' + Highcharts.numberFormat(Math.abs(this.point.y), 0);
+		                        '占比: ' + Highcharts.numberFormat(Math.abs(this.point.y), 5);
 		                }
 		            },
 
 		            series: [{
 		                name: '亏损',
-		                data: [-2.2, -2.2, -2.3, -2.5, -2.7, -3.1, -3.2,
-		                    -3.0, -3.2, -4.3]
+		                data: [
+		                {% load static %}
+		                {% if negative_ratio %}
+		                {% for ratio in negative_ratio %}
+		                    {{ratio}},
+		                {%endfor%}
+		                {%endif%}
+		                ]
 		            }, {
 		                name: '盈利',
-		                data: [2.1, 2.0, 2.2, 2.4, 2.6, 3.0, 3.1, 2.9,
-		                    3.1, 4.1, 4.3, 3.6]
+		                data: [
+		                {% load static %}
+		                {% if positive_ratio %}
+		                {% for ratio in positive_ratio %}
+		                    {{ratio}},
+		                {%endfor%}
+		                {%endif%}
+		                ]
 		            }]
 		        });
 		    });

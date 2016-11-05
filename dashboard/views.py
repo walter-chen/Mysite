@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+import calendar
+import datetime
 import time
 
 from django.db.models.aggregates import Count, Max, Sum
@@ -7,7 +9,7 @@ from django.shortcuts import render, render_to_response
 from reportlab.pdfgen import canvas
 
 from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
-    District, Client
+    District, Client, StationAccounting
 from dashboard.utilies import TowerCounter
 
 
@@ -132,8 +134,39 @@ def contractInfo(request):
 def singleStationAccount(request):
     return render(request, "dashboard/dashboard-singleStationAccount.html", {})
 def singleStationAccountResult(request):
-    provider = request.POST.get('selectbasic', '')
-    return HttpResponse(provider)
+    district = request.POST.get('selectbasic', '')
+    targetDateString = request.POST.get('month', '')
+    a,monthLast =calendar.monthrange(int(targetDateString.split("-")[0]), int(targetDateString.split("-")[1]))
+    monthFirstDate = targetDateString+"-1"
+    monthLastDate = targetDateString+"-"+ str(monthLast)
+    targetMonthProfitRateSet = StationAccounting.objects.filter(district=district, fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate)
+    positive_profit_rate_count = [0]*11
+    negative_profit_rate_count = [0]*11
+    heads = range(0,10)
+    tails = range(1,11)
+    for row in targetMonthProfitRateSet:
+        i = 0
+        for head, tail in zip(heads, tails):
+            if row.profit_rate>=head and row.profit_rate<tail:
+                positive_profit_rate_count[i] += 1
+            elif row.profit_rate>(0-tail) and row.profit_rate<=(0-head):
+                negative_profit_rate_count[i] += 1
+            i+=1
+    positive_profit_rate_ratio = [0.0]*11
+    negative_profit_rate_ratio = [0.0]*11
+    for i in range(len(positive_profit_rate_count)):
+        positive_profit_rate_ratio[i] = positive_profit_rate_count[i]/(float(targetMonthProfitRateSet.count())+0.000001)
+        negative_profit_rate_ratio[i] = 0 - negative_profit_rate_count[i]/(float(targetMonthProfitRateSet.count())+0.000001)
+#    current_date = datetime.datetime.now()
+#    current_month = current_date.month
+#    StationAccounting.objects.filter()
+    
+    context ={"district":district,
+              "month":targetDateString,
+              "negative_ratio":negative_profit_rate_ratio,
+              "positive_ratio":positive_profit_rate_ratio
+            }
+    return render(request, "dashboard/dashboard-singleStationAccount.html", context)
 
 
 
