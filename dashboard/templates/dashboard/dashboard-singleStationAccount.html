@@ -2,40 +2,41 @@
   {% block individual %}
   	{% load static %}
   	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-    <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
-	<script src="https://code.highcharts.com/modules/exporting.js"></script>
+   <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
+	  <script src="https://code.highcharts.com/modules/exporting.js"></script>
   {% endblock %}  
   
   {% block content %}
-	<div class="col-md-12 col-sm-8  col-xs-12">
-		<div class="row">
-		  <div class="form-group pull-center">
-		  	<form action="/dashboard/singleStationAccountResult" method="post">
-		  	{% csrf_token %}
-		  	    <div class="col-md-2">
-		          <select id="selectbasic" name="selectbasic" class="search form-control">
-		          		<option selected="selected" value="{{district}}">{{district}}</option>
-			  			<option value="思明区">思明区</option>
-			  			<option value="海沧区">海沧区</option>
-			  			<option value="湖里区">湖里区</option>
-			  			<option value="翔安区">翔安区</option>
-			  			<option value="集美区">集美区</option>
-			  			<option value="同安区">同安区</option>
-				  </select>
-				</div>
-				<div class="col-md-2">
-					<input id="month" name="month" type="month" class="form-control" value="{{month}}"/>
-				</div>
-				<div class="col-md-8">
-					<button type="submit" class="btn btn-primary">提交</button>
-				</div>
-		    </form>
-		  </div>
-		</div>
+	
+ 		<div class="row">
+ 		  <div class="form-group pull-center">
+ 		  	<form action="/dashboard/singleStationAccountResult" method="post">
+ 		  	{% csrf_token %}
+  	    <div class="col-md-2">
+            <select id="selectbasic" name="selectbasic" class="search form-control">
+            		<option selected="selected" value="{{district}}">{{district}}</option>
+   			  			<option value="思明区">思明区</option>
+   			  			<option value="海沧区">海沧区</option>
+   			  			<option value="湖里区">湖里区</option>
+   			  			<option value="翔安区">翔安区</option>
+   			  			<option value="集美区">集美区</option>
+   			  			<option value="同安区">同安区</option>
+   				  </select>
+ 				 </div>
+ 				<div class="col-md-2">
+ 					<input id="month" name="month" type="month" class="form-control" value="{{month}}"/>
+ 				</div>
+ 				<div class="col-md-8">
+ 					<button type="submit" class="btn btn-primary">提交</button>
+ 				</div>
+ 		   </form>
+ 		  </div>
+ 		</div>
 	  <span class="counter pull-right"></span>
 
 	  <div class ="row">
-	    <div class ="col-xs-12" id="NegativeStackBar" style="width: 600px; height: 360px"></div>
+	    <div class ="col-md-6 col-xs-6" id="NegativeStackBar" style="width: 500px; height: 300px"></div>
+	    <div class ="col-md-12 col-xs-12" id="container" style="min-width: 1000px; height: 600px"></div>
 	  </div>
 
 	  <table class="table table-hover table-bordered results">
@@ -59,7 +60,7 @@
 		   {% endif %}
 	    </tbody>
 	  </table>
-	</div>	
+
   {% endblock %}
   
   {% block myscript %}
@@ -144,6 +145,46 @@
 		    });
 
 		});
+     </script>
+
+     <script type="text/javascript">
+        $(function () {
+            Highcharts.chart('container', {
+                chart: {
+                    type: 'column'
+                },
+                title: {
+                    text: 'Column chart with negative values'
+                },
+                xAxis: {
+                    categories: [
+                    {% if CoverageSceneList %}
+                    {% for scene in CoverageSceneList %}
+                      '{{scene}}',
+                    {%endfor%}
+                    {%endif%}
+                    ]
+                },
+                credits: {
+                    enabled: false
+                },
+                series: [
+                {% if fixedPlacementColumsPositiveData %}
+                {%for data,values in fixedPlacementColumsPositiveData.items%}
+                {
+                    name: '{{data}}',
+                    data: [
+                    {% for a in values %}
+                      {{a}},
+                    {%endfor%}
+                    ]
+                },
+                {%endfor%}
+                {%endif%} 
+                ]
+            });
+        });
+
      </script>
   {% endblock %}
 

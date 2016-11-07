@@ -9,8 +9,9 @@ from django.shortcuts import render, render_to_response
 from reportlab.pdfgen import canvas
 
 from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
-    District, Client, StationAccounting
-from dashboard.utilies import TowerCounter
+    District, Client, StationAccounting, CoverageScene, AssetSource
+from dashboard.utilies import MetaData
+from decimal import Decimal
 
 
 def dashboard(request):
@@ -157,19 +158,51 @@ def singleStationAccountResult(request):
     for i in range(len(positive_profit_rate_count)):
         positive_profit_rate_ratio[i] = positive_profit_rate_count[i]/(float(targetMonthProfitRateSet.count())+0.000001)
         negative_profit_rate_ratio[i] = 0 - negative_profit_rate_count[i]/(float(targetMonthProfitRateSet.count())+0.000001)
-#    current_date = datetime.datetime.now()
-#    current_month = current_date.month
-#    StationAccounting.objects.filter()
+##########
+    fixedPlacementColumsPositiveData = {}
+    fixedPlacementColumsNegativeData = {}
+    coverageSceneList = list(CoverageScene.objects.all())
+    assetSource = list(AssetSource.objects.all())
+   
+    for scene in coverageSceneList:
+        for source in assetSource:
+            addtwodimdict(fixedPlacementColumsPositiveData, scene, source, \
+            StationAccounting.objects.filter( \
+                source=source, coverage_scene=scene, district=district, fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate, profit__gte=0).aggregate(Sum('profit'))
+            )
+            addtwodimdict(fixedPlacementColumsNegativeData, scene, source, \
+            StationAccounting.objects.filter( \
+                source=source, coverage_scene=scene, district=district, fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate, profit__lt=0).aggregate(Sum('profit'))
+            )
+   
+    godposi = {}
+    for source in assetSource:
+        godposi[source.__str__] = []
+        for scene in coverageSceneList:
+            a=Decimal(0)
+            b=Decimal(0)
+            if fixedPlacementColumsPositiveData[scene][source].values()[0].__str__() != "None":
+                a = fixedPlacementColumsPositiveData[scene][source].values()[0]
+            if fixedPlacementColumsNegativeData[scene][source].values()[0].__str__() != "None":
+                b = fixedPlacementColumsNegativeData[scene][source].values()[0]
+            godposi[source.__str__].append((a + b).__str__())
     
-    context ={"district":district,
+    context ={
+              "fixedPlacementColumsPositiveData":godposi,
+              "district":district,
+              "CoverageSceneList":coverageSceneList,
+              "AssetSource":assetSource,
               "month":targetDateString,
               "negative_ratio":negative_profit_rate_ratio,
-              "positive_ratio":positive_profit_rate_ratio
+              "positive_ratio":positive_profit_rate_ratio,
             }
     return render(request, "dashboard/dashboard-singleStationAccount.html", context)
 
-
-
+def addtwodimdict(thedict, key_a, key_b, val):
+    if key_a in thedict:
+        thedict[key_a].update({key_b: val})
+    else:
+        thedict.update({key_a:{key_b: val}})
 
 
 

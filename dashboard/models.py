@@ -68,9 +68,19 @@ class Indent(models.Model):
     
 class AssetSource(models.Model):
     source = models.CharField(max_length=50, primary_key=True)
+    
+    def __unicode__(self):
+        return smart_unicode(self.source)
+    def __str__(self):
+        return self.source
 
 class CoverageScene(models.Model):
     type = models.CharField(max_length=100, primary_key=True)
+    
+    def __unicode__(self):
+        return smart_unicode(self.type)
+    def __str__(self):
+        return self.type
 
 class StationAccounting(models.Model):
     station_code = models.ForeignKey(Station, to_field='station_code', on_delete=models.CASCADE)
