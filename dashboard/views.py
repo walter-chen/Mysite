@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import calendar
 import datetime
+from decimal import Decimal
+import memcache
 import time
 
 from django.db.models.aggregates import Count, Max, Sum
@@ -11,29 +13,54 @@ from reportlab.pdfgen import canvas
 from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
     District, Client, StationAccounting, CoverageScene, AssetSource
 from dashboard.utilies import MetaData
-from decimal import Decimal
 
 
 def dashboard(request):
-    stationInfos = District.objects.annotate(num_stations=Count('station'))
-    contractInfos = District.objects.annotate(num_contracts=Count('property'))
-    investmentAmount = District.objects.annotate(investment=Sum('project__investment_price'))
-    indentIncomes = District.objects.annotate(incomes=Sum('indent__price'))
-    propertyPrice = District.objects.annotate(price=Sum('property__price'))
-    simiClientOfferMoney = Client.objects.annotate(money=Sum('indent__price')) \
-                .filter(indent__district_id="思明区")
     
-    context = {"stationInfos":stationInfos,
-               "contractInfos":contractInfos,
-               "investmentAmount":investmentAmount,
-               "indentIncomes":indentIncomes,
-               "propertyPrice":propertyPrice,
-                "simClientOfferMoney":simiClientOfferMoney}
+    mc = memcache.Client(['127.0.0.1:11211'], debug=0)
+    timeout_value = 360000
+    
+    if mc.get('stationInfos')==None:
+        print "set memcached"
+        stationInfos = District.objects.annotate(num_stations=Count('station'))
+        contractInfos = District.objects.annotate(num_contracts=Count('property'))
+        investmentAmount = District.objects.annotate(investment=Sum('project__investment_price'))
+        indentIncomes = District.objects.annotate(incomes=Sum('indent__price'))
+        propertyPrice = District.objects.annotate(price=Sum('property__price'))
+        simiClientOfferMoney = Client.objects.annotate(money=Sum('indent__price')) \
+                    .filter(indent__district_id="思明区")
+        mc.set_multi({"stationInfos" : stationInfos, \
+                     "contractInfos" : contractInfos, \
+                     "investmentAmount" : investmentAmount,\
+                     "indentIncomes" : indentIncomes, \
+                     "propertyPrice" : propertyPrice, \
+                     "simiClientOfferMoney" : simiClientOfferMoney}, \
+                     timeout_value)
+        context = {"stationInfos":stationInfos,
+           "contractInfos":contractInfos,
+           "investmentAmount":investmentAmount,
+           "indentIncomes":indentIncomes,
+           "propertyPrice":propertyPrice,
+            "simClientOfferMoney":simiClientOfferMoney}
+    else:
+        print "get memcached"
+        stationInfos = mc.get("stationInfos")
+        contractInfos = mc.get("contractInfos")
+        investmentAmount = mc.get("investmentAmount")
+        indentIncomes = mc.get("indentIncomes")
+        propertyPrice = mc.get("propertyPrice")
+        simiClientOfferMoney = mc.get("simiClientOfferMoney")
+        context = {"stationInfos":stationInfos,
+                   "contractInfos":contractInfos,
+                   "investmentAmount":investmentAmount,
+                   "indentIncomes":indentIncomes,
+                   "propertyPrice":propertyPrice,
+                    "simClientOfferMoney":simiClientOfferMoney}
     return render(request, 'dashboard/dashboard.html', context)
 def login(request):
     username = request.POST.get('username', '')
     password = request.POST.get('password', '')
-    return HttpResponseRedirect("/dashboard/stationDetailSearch")
+    return HttpResponseRedirect("/dashboard")
 def loginPage(request):
     return render(request, 'dashboard/loginPage.html', {})
 
