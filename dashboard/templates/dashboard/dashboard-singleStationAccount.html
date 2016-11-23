@@ -176,8 +176,8 @@
         		}],
                 
                 series: [
-                {% if fixedPlacementColumsPositiveData %}
-                {%for data,values in fixedPlacementColumsPositiveData.items%}
+                {% if turnover %}
+                {%for data,values in turnover.items%}
                 {
                     name: '{{data}}',
                     data: [

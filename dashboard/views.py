@@ -21,7 +21,6 @@ def dashboard(request):
     timeout_value = 360000
     
     if mc.get('stationInfos')==None:
-        print "set memcached"
         stationInfos = District.objects.annotate(num_stations=Count('station'))
         contractInfos = District.objects.annotate(num_contracts=Count('property'))
         investmentAmount = District.objects.annotate(investment=Sum('project__investment_price'))
@@ -29,33 +28,71 @@ def dashboard(request):
         propertyPrice = District.objects.annotate(price=Sum('property__price'))
         simiClientOfferMoney = Client.objects.annotate(money=Sum('indent__price')) \
                     .filter(indent__district_id="思明区")
+        stationsSum = 0
+        for station in stationInfos:
+            stationsSum = stationsSum+station.num_stations
+        contractSum = 0
+        for contract in contractInfos:
+            contractSum = contractSum+contract.num_contracts
+        investment = 0
+        for price in investmentAmount:
+            investment = investment + price.investment
+        indentIncomesSum = 0
+        for incomes in indentIncomes:
+            indentIncomesSum = indentIncomesSum + incomes.incomes
+        propertyPriceSum = 0
+        for property in propertyPrice:
+            propertyPriceSum = propertyPriceSum + property.price
+                    
         mc.set_multi({"stationInfos" : stationInfos, \
                      "contractInfos" : contractInfos, \
                      "investmentAmount" : investmentAmount,\
                      "indentIncomes" : indentIncomes, \
                      "propertyPrice" : propertyPrice, \
-                     "simiClientOfferMoney" : simiClientOfferMoney}, \
+                     "simiClientOfferMoney" : simiClientOfferMoney, \
+                     "stationsSum" : format(stationsSum,","), \
+                     "contractSum" : format(contractSum,","), \
+                     "investment" : format(investment, ","), \
+                     "indentIncomesSum" : format(indentIncomesSum, ","),
+                     "propertyPriceSum" : format(propertyPriceSum, ",")}, \
                      timeout_value)
         context = {"stationInfos":stationInfos,
-           "contractInfos":contractInfos,
-           "investmentAmount":investmentAmount,
-           "indentIncomes":indentIncomes,
-           "propertyPrice":propertyPrice,
-            "simClientOfferMoney":simiClientOfferMoney}
+                   "contractInfos":contractInfos,
+                   "investmentAmount":investmentAmount,
+                   "indentIncomes":indentIncomes,
+                   "propertyPrice":propertyPrice,
+                   "simClientOfferMoney":simiClientOfferMoney,
+                   "stationsSum" : format(stationsSum,","),
+                   "contractSum" : format(contractSum,","),
+                   "investment" : format(investment, ","),
+                   "indentIncomesSum" : format(indentIncomesSum, ","),
+                   "propertyPriceSum" : format(propertyPriceSum, ","),
+                   "active1" : "active"
+                }
     else:
-        print "get memcached"
         stationInfos = mc.get("stationInfos")
         contractInfos = mc.get("contractInfos")
         investmentAmount = mc.get("investmentAmount")
         indentIncomes = mc.get("indentIncomes")
         propertyPrice = mc.get("propertyPrice")
         simiClientOfferMoney = mc.get("simiClientOfferMoney")
+        stationsSum = mc.get("stationsSum")
+        contractSum = mc.get("contractSum")
+        investment = mc.get("investment")
+        indentIncomesSum = mc.get("indentIncomesSum")
+        propertyPriceSum = mc.get("propertyPriceSum")
         context = {"stationInfos":stationInfos,
                    "contractInfos":contractInfos,
                    "investmentAmount":investmentAmount,
                    "indentIncomes":indentIncomes,
                    "propertyPrice":propertyPrice,
-                    "simClientOfferMoney":simiClientOfferMoney}
+                    "simClientOfferMoney":simiClientOfferMoney,
+                    "stationsSum" : stationsSum,
+                    "contractSum" : contractSum,
+                    "investment" : investment,
+                    "indentIncomesSum" : indentIncomesSum,
+                    "propertyPriceSum" : propertyPriceSum,
+                    "active1" : "active"}
     return render(request, 'dashboard/dashboard.html', context)
 def login(request):
     username = request.POST.get('username', '')
@@ -66,11 +103,12 @@ def loginPage(request):
 
 
 def stationDetailSearch(request):
-    return render(request, 'dashboard/dashboard-search.html', {})
+    context = {"active3":"active"}
+    return render(request, 'dashboard/dashboard-search.html', context)
 def stationDetailSearchResult(request):
     keyword = request.GET.get('keyword', '')
     stations = list(Station.objects.filter(station_name__contains=keyword))
-    return render(request, 'dashboard/dashboard-search.html', {'stations':stations})
+    return render(request, 'dashboard/dashboard-search.html', {'stations':stations, "active3":"active"})
 def stationDetails(request, station_code):
     station = Station.objects.get(station_code = station_code)
     highTemperatureAmount = list(Order.objects.filter(station_code=station_code, alarm_details__contains="温度")).__len__()
@@ -125,8 +163,8 @@ def dashboardbase(request):
     return render(request, "dashboard/dashboard-base.html", {'station': station})
 
 def showFlows(request):
-    
-    return render(request, "dashboard/dashboard-flow.html", {})
+    context = {"active4" : "active"}
+    return render(request, "dashboard/dashboard-flow.html", context)
 
 def viewPDFOnline(request):
     with open('/home/cc/Documents/关于加强站址规范交维管控的通知正文.pdf', 'r') as pdf:
@@ -154,13 +192,17 @@ def contractInfo(request):
     context = {
                'DISTRICT_LIST':DISTRICT_LIST,
                'columnData':columnData,
-               'propertys':propertys
+               'propertys':propertys,
+               'active5':"active"
                }
         
     return render(request, "dashboard/contractInfo.html", context)
     
 def singleStationAccount(request):
-    return render(request, "dashboard/dashboard-singleStationAccount.html", {})
+    context ={
+          "active2" : "active",
+     }
+    return render(request, "dashboard/dashboard-singleStationAccount.html", context)
 def singleStationAccountResult(request):
     district = request.POST.get('selectbasic', '')
     targetDateString = request.POST.get('month', '')
@@ -202,9 +244,9 @@ def singleStationAccountResult(request):
                 source=source, coverage_scene=scene, district=district, fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate, profit__lt=0).aggregate(Sum('profit'))
             )
    
-    godposi = {}
+    turnover = {}
     for source in assetSource:
-        godposi[source.__str__] = []
+        turnover[source.__str__] = []
         for scene in coverageSceneList:
             a=Decimal(0)
             b=Decimal(0)
@@ -212,16 +254,17 @@ def singleStationAccountResult(request):
                 a = fixedPlacementColumsPositiveData[scene][source].values()[0]
             if fixedPlacementColumsNegativeData[scene][source].values()[0].__str__() != "None":
                 b = fixedPlacementColumsNegativeData[scene][source].values()[0]
-            godposi[source.__str__].append((a + b).__str__())
+            turnover[source.__str__].append((a + b).__str__())
     
     context ={
-              "fixedPlacementColumsPositiveData":godposi,
+              "turnover":turnover,
               "district":district,
               "CoverageSceneList":coverageSceneList,
               "AssetSource":assetSource,
               "month":targetDateString,
               "negative_ratio":negative_profit_rate_ratio,
               "positive_ratio":positive_profit_rate_ratio,
+              "active2" : "active"
             }
     return render(request, "dashboard/dashboard-singleStationAccount.html", context)
 

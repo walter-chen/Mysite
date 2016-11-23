@@ -14,11 +14,11 @@
   	    <h2 class ="page-header">总体情况</h2>
 	    <div class="col-md-4">
 	      <ul>
-			<li>站址数：{{stationInfos.0.num_stations|add:stationInfos.1.num_stations|add:stationInfos.2.num_stations|add:stationInfos.3.num_stations|add:stationInfos.4.num_stations|add:stationInfos.5.num_stations}}个</li>
-			<li>合同数：{{contractInfos.0.num_contracts|add:contractInfos.1.num_contracts|add:contractInfos.2.num_contracts|add:contractInfos.3.num_contracts|add:contractInfos.4.num_contracts|add:contractInfos.5.num_contracts}}个</li>
-			<li>投资额：{{investmentAmount.0.investment|add:investmentAmount.1.investment|add:investmentAmount.2.investment|add:investmentAmount.3.investment|add:investmentAmount.4.investment|add:investmentAmount.5.investment}}元</li>
-			<li>营业额：{{indentIncomes.0.incomes|add:indentIncomes.1.incomes|add:indentIncomes.2.incomes|add:indentIncomes.3.incomes|add:indentIncomes.4.incomes|add:indentIncomes.5.incomes}}元</li>
-			<li>合同总金额：{{propertyPrice.0.price|add:propertyPrice.1.price|add:propertyPrice.2.price|add:propertyPrice.3.price|add:propertyPrice.4.price|add:propertyPrice.5.price}}元</li>
+			<li>站址数：{{stationsSum}}个</li>
+			<li>合同数：{{contractSum}}个</li>
+			<li>投资额：{{investment}}元</li>
+			<li>营业额：{{indentIncomesSum}}元</li>
+			<li>合同总金额：{{propertyPriceSum}}元</li>
 	      <ul>
 	    </div>
 	    <div class="col-md-8" id="columnMap" style="min-width: 100px; height: 200px; margin: 0 auto"></div>
@@ -62,7 +62,7 @@
         tooltip: {
             headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
             pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y:.1f} 个</b></td></tr>',
+                '<td style="padding:0"><b>{point.y:.0f} 个</b></td></tr>',
             footerFormat: '</table>',
             shared: true,
             useHTML: true
@@ -80,7 +80,19 @@
             	   {{stationInfos.2.num_stations}},
             	   {{stationInfos.3.num_stations}},
             	   {{stationInfos.4.num_stations}},
-            	   {{stationInfos.5.num_stations}}]
+            	   {{stationInfos.5.num_stations}}],
+            dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'center',
+                format: '{point.y:.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
 
         }, {
             name: '合同',
@@ -89,7 +101,19 @@
             	   {{contractInfos.2.num_contracts}},
             	   {{contractInfos.3.num_contracts}},
             	   {{contractInfos.4.num_contracts}},
-            	   {{contractInfos.5.num_contracts}}]
+            	   {{contractInfos.5.num_contracts}}],
+            dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'center',
+                format: '{point.y:.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
 
         }]
     });
@@ -184,7 +208,7 @@
 
         tooltip: {
             shared: true,
-            pointFormat: '<span style="color:{series.color}">{series.name}: <b>${point.y:,.0f}</b><br/>'
+            pointFormat: '<span style="color:{series.color}">{series.name}: <b>￥{point.y:,.0f}</b><br/>'
         },
 
         legend: {
