@@ -8,6 +8,7 @@ import time
 from django.db.models.aggregates import Count, Max, Sum
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, render_to_response
+from pip._vendor.requests.packages import chardet
 from reportlab.pdfgen import canvas
 
 from dashboard.models import Station, Order, Resource, Property, Indent, Project, \
@@ -227,43 +228,76 @@ def singleStationAccountResult(request):
     for i in range(len(positive_profit_rate_count)):
         positive_profit_rate_ratio[i] = positive_profit_rate_count[i]/(float(targetMonthProfitRateSet.count())+0.000001)
         negative_profit_rate_ratio[i] = 0 - negative_profit_rate_count[i]/(float(targetMonthProfitRateSet.count())+0.000001)
-##########
+
     fixedPlacementColumsPositiveData = {}
     fixedPlacementColumsNegativeData = {}
     coverageSceneList = list(CoverageScene.objects.all())
     assetSource = list(AssetSource.objects.all())
-   
-    for scene in coverageSceneList:
-        for source in assetSource:
-            addtwodimdict(fixedPlacementColumsPositiveData, scene, source, \
-            StationAccounting.objects.filter( \
-                source=source, coverage_scene=scene, district=district, fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate, profit__gte=0).aggregate(Sum('profit'))
-            )
-            addtwodimdict(fixedPlacementColumsNegativeData, scene, source, \
-            StationAccounting.objects.filter( \
-                source=source, coverage_scene=scene, district=district, fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate, profit__lt=0).aggregate(Sum('profit'))
-            )
-   
-    turnover = {}
-    for source in assetSource:
-        turnover[source.__str__] = []
-        for scene in coverageSceneList:
-            a=Decimal(0)
-            b=Decimal(0)
-            if fixedPlacementColumsPositiveData[scene][source].values()[0].__str__() != "None":
-                a = fixedPlacementColumsPositiveData[scene][source].values()[0]
-            if fixedPlacementColumsNegativeData[scene][source].values()[0].__str__() != "None":
-                b = fixedPlacementColumsNegativeData[scene][source].values()[0]
-            turnover[source.__str__].append((a + b).__str__())
     
+    sceneMapProfitSum = {}
+    for scene in coverageSceneList:
+        sceneMapProfitSum[scene.__str__()] = StationAccounting.objects.filter( \
+                coverage_scene=scene, district='海沧区', fetch_data_date__gte=monthFirstDate, fetch_data_date__lte=monthLastDate).aggregate(Sum('profit'))['profit__sum']
+        if sceneMapProfitSum[scene.__str__()] == None:
+            sceneMapProfitSum[scene.__str__()]=Decimal(0.0)
+    print list(["你","我", "他"]).__contains__("你")
+    
+    CityTownCountryEnum = list([u"密集市区",u"一般市区",u"农村",u"住宅小区",u"乡镇",u"县城",u"市区"])
+    BigSiteEnum = list([u"党政机关",u"医院",u"宾馆酒店",u"商业市场",u"大型商场",u"校园",u"商务楼宇",u"工业园"])
+    TransportAlongStreetEnum = list([u"其他交通干线",u"国道",u"车站",u"高铁线",u"高速"])
+    ScenicRegionEnum = list([u"3A景区",u"4A景区",u"5A景区",u"其他景区"])
+    OthersEnum = list([u"其他"])
+    
+    CityTownCountryDict = {}
+    CityTownCountrySum = 0
+    BigSiteEnumDict = {}
+    BigSiteEnumSum = 0
+    TransportAlongStreetDict = {}
+    TransportAlongStreetSum = 0
+    ScenicRegionDict = {}
+    ScenicRegionSum = 0
+    OthersDict = {}
+    OthersSum = 0
+    for key in sceneMapProfitSum.keys():
+        if CityTownCountryEnum.__contains__(key):
+            CityTownCountryDict[key] = sceneMapProfitSum[key]
+            CityTownCountrySum = CityTownCountrySum + CityTownCountryDict[key]
+            continue
+        if BigSiteEnum.__contains__(key):
+            BigSiteEnumDict[key] = sceneMapProfitSum[key]
+            BigSiteEnumSum = BigSiteEnumSum + BigSiteEnumDict[key]
+            continue
+        if TransportAlongStreetEnum.__contains__(key):
+            TransportAlongStreetDict[key] = sceneMapProfitSum[key]
+            TransportAlongStreetSum = TransportAlongStreetSum + TransportAlongStreetDict[key]
+            continue
+        if ScenicRegionEnum.__contains__(key):
+            ScenicRegionDict[key] = sceneMapProfitSum[key]
+            ScenicRegionSum = ScenicRegionSum + ScenicRegionDict[key]
+            continue
+        if OthersEnum.__contains__(key):
+            OthersDict[key] = sceneMapProfitSum[key]
+            OthersSum = OthersSum + OthersDict[key]
+            continue
+        
+    print CityTownCountrySum
     context ={
-              "turnover":turnover,
+              "CityTownCountryDict":CityTownCountryDict,
+              "CityTownCountrySum":CityTownCountrySum,
+              "BigSiteEnumDict":BigSiteEnumDict,
+              "BigSiteEnumSum":BigSiteEnumSum,
+              "TransportAlongStreetDict":TransportAlongStreetDict,
+              "TransportAlongStreetSum":TransportAlongStreetSum,
+              "ScenicRegionDict":ScenicRegionDict,
+              "ScenicRegionSum":ScenicRegionSum,
+              "OthersDict":OthersDict,
+              "OthersSum":OthersSum,
               "district":district,
               "CoverageSceneList":coverageSceneList,
               "AssetSource":assetSource,
               "month":targetDateString,
-              "negative_ratio":negative_profit_rate_ratio,
-              "positive_ratio":positive_profit_rate_ratio,
+              "positive_profit_rate_count":positive_profit_rate_count,
+              "negative_profit_rate_count":negative_profit_rate_count,
               "active2" : "active"
             }
     return render(request, "dashboard/dashboard-singleStationAccount.html", context)
@@ -274,6 +308,17 @@ def addtwodimdict(thedict, key_a, key_b, val):
     else:
         thedict.update({key_a:{key_b: val}})
 
+def fieldManagement(request):
+    context = {'active6': 'active'}
+    return render(request, "dashboard/dashboard-fieldManagement.html", context)
+
+def clientRelationMaintain(request):
+    context = {'active7':'active'}
+    return render(request, "dashboard/dashboard-clientRelationMaintain.html", context)
+
+def benchmarkAnalysis(request):
+    context = {'active8':'active'}
+    return render(request, "dashboard/dashboard-benchmarkAnalysis.html", context)
 
 
 

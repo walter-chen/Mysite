@@ -23,7 +23,13 @@ urlpatterns = [
     
     url(r'^baiduMap$', views.baiduMap, name='baiduMap'),
     
-    url(r'^contractInfo$', views.contractInfo, name='contractInfo')
+    url(r'^contractInfo$', views.contractInfo, name='contractInfo'),
+    
+    url(r'^fieldManagement$', views.fieldManagement, name='fieldManagement'),
+    
+    url(r'^clientRelationMaintain$', views.clientRelationMaintain, name='clientRelationMaintain'),
+    
+    url(r'^benchmarkAnalysis$', views.benchmarkAnalysis, name = 'benchmarkAnalysis')
 ]
 
 
