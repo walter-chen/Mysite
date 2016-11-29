@@ -32,92 +32,92 @@
   {% block myscript %}
   	<script type="text/javascript">
   	$(function () {
-        $('#columnMap').highcharts({
-            chart: {
-                type: 'column'
-            },
+    $('#columnMap').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '各区站址及合同总数'
+        },
+        subtitle: {
+            text: '数据来源: 资源系统'
+        },
+        xAxis: {
+            categories: [
+                '{{stationInfos.0.district_name}}',
+                '{{stationInfos.1.district_name}}',
+                '{{stationInfos.2.district_name}}',
+                '{{stationInfos.3.district_name}}',
+                '{{stationInfos.4.district_name}}',
+                '{{stationInfos.5.district_name}}'
+            ],
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
             title: {
-                text: '各区站址及合同总数'
-            },
-            subtitle: {
-                text: '数据来源: 资源系统'
-            },
-            xAxis: {
-                categories: [
-                    '{{stationInfos.0.district_name}}',
-                    '{{stationInfos.1.district_name}}',
-                    '{{stationInfos.2.district_name}}',
-                    '{{stationInfos.3.district_name}}',
-                    '{{stationInfos.4.district_name}}',
-                    '{{stationInfos.5.district_name}}'
-                ],
-                crosshair: true
-            },
-            yAxis: {
-                min: 0,
-                title: {
-                    text: '数量(个)'
+                text: '数量(个)'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.0f} 个</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '站址',
+            data: [{{stationInfos.0.num_stations}},
+            	   {{stationInfos.1.num_stations}},
+            	   {{stationInfos.2.num_stations}},
+            	   {{stationInfos.3.num_stations}},
+            	   {{stationInfos.4.num_stations}},
+            	   {{stationInfos.5.num_stations}}],
+            dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'center',
+                format: '{point.y:.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
                 }
-            },
-            tooltip: {
-                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.0f} 个</b></td></tr>',
-                footerFormat: '</table>',
-                shared: true,
-                useHTML: true
-            },
-            plotOptions: {
-                column: {
-                    pointPadding: 0.2,
-                    borderWidth: 0
-                }
-            },
-            series: [{
-                name: '站址',
-                data: [{{stationInfos.0.num_stations}},
-                	   {{stationInfos.1.num_stations}},
-                	   {{stationInfos.2.num_stations}},
-                	   {{stationInfos.3.num_stations}},
-                	   {{stationInfos.4.num_stations}},
-                	   {{stationInfos.5.num_stations}}],
-                dataLabels: {
-                    enabled: true,
-                    rotation: 0,
-                    color: '#FFFFFF',
-                    align: 'center',
-                    format: '{point.y:.0f}', // one decimal
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
-                }
+            }
 
-            }, {
-                name: '合同',
-                data: [{{contractInfos.0.num_contracts}},
-                	   {{contractInfos.1.num_contracts}},
-                	   {{contractInfos.2.num_contracts}},
-                	   {{contractInfos.3.num_contracts}},
-                	   {{contractInfos.4.num_contracts}},
-                	   {{contractInfos.5.num_contracts}}],
-                dataLabels: {
-                    enabled: true,
-                    rotation: 0,
-                    color: '#FFFFFF',
-                    align: 'center',
-                    format: '{point.y:.0f}', // one decimal
-                    y: 10, // 10 pixels down from the top
-                    style: {
-                        fontSize: '13px',
-                        fontFamily: 'Verdana, sans-serif'
-                    }
+        }, {
+            name: '合同',
+            data: [{{contractInfos.0.num_contracts}},
+            	   {{contractInfos.1.num_contracts}},
+            	   {{contractInfos.2.num_contracts}},
+            	   {{contractInfos.3.num_contracts}},
+            	   {{contractInfos.4.num_contracts}},
+            	   {{contractInfos.5.num_contracts}}],
+            dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'center',
+                format: '{point.y:.0f}', // one decimal
+                y: 10, // 10 pixels down from the top
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
                 }
+            }
 
-            }]
-        });
+        }]
     });
+});
     </script>
     <script type="text/javascript">
       $(function () {
@@ -173,73 +173,73 @@
     </script>
     <script type="text/javascript">
     $(function () {
-        $('#spiderweb').highcharts({
+    $('#spiderweb').highcharts({
 
-            chart: {
-                polar: true,
-                type: 'line'
-            },
+        chart: {
+            polar: true,
+            type: 'line'
+        },
 
-            title: {
-                text: '投资额 vs 销售额',
-                x: -80
-            },
+        title: {
+            text: '投资额 vs 销售额',
+            x: -80
+        },
 
-            pane: {
-                size: '80%'
-            },
+        pane: {
+            size: '80%'
+        },
 
-            xAxis: {
-                categories: ['{{stationInfos.0.district_name}}',
-                 			 '{{stationInfos.1.district_name}}',
-                 			 '{{stationInfos.2.district_name}}',
-                 			 '{{stationInfos.3.district_name}}',
-                 			 '{{stationInfos.4.district_name}}',
-                        	 '{{stationInfos.5.district_name}}'],
-                tickmarkPlacement: 'on',
-                lineWidth: 0
-            },
+        xAxis: {
+            categories: ['{{stationInfos.0.district_name}}',
+             			 '{{stationInfos.1.district_name}}',
+             			 '{{stationInfos.2.district_name}}',
+             			 '{{stationInfos.3.district_name}}',
+             			 '{{stationInfos.4.district_name}}',
+                    	 '{{stationInfos.5.district_name}}'],
+            tickmarkPlacement: 'on',
+            lineWidth: 0
+        },
 
-            yAxis: {
-                gridLineInterpolation: 'polygon',
-                lineWidth: 0,
-                min: 0
-            },
+        yAxis: {
+            gridLineInterpolation: 'polygon',
+            lineWidth: 0,
+            min: 0
+        },
 
-            tooltip: {
-                shared: true,
-                pointFormat: '<span style="color:{series.color}">{series.name}: <b>￥{point.y:,.0f}</b><br/>'
-            },
+        tooltip: {
+            shared: true,
+            pointFormat: '<span style="color:{series.color}">{series.name}: <b>￥{point.y:,.0f}</b><br/>'
+        },
 
-            legend: {
-                align: 'right',
-                verticalAlign: 'top',
-                y: 70,
-                layout: 'vertical'
-            },
+        legend: {
+            align: 'right',
+            verticalAlign: 'top',
+            y: 70,
+            layout: 'vertical'
+        },
 
-            series: [{
-                name: '投资额（元）',
-                data: [{{investmentAmount.0.investment|stringformat:'d'}},
-                	   {{investmentAmount.1.investment|stringformat:'d'}},
-                	   {{investmentAmount.2.investment|stringformat:'d'}},
-                	   {{investmentAmount.3.investment|stringformat:'d'}},
-                	   {{investmentAmount.4.investment|stringformat:'d'}},
-                	   {{investmentAmount.5.investment|stringformat:'d'}}],
-                pointPlacement: 'on'
-            }, {
-                name: '收入（元/年）',
-                data: [{{indentIncomes.0.incomes|stringformat:'d'}},
-                	   {{indentIncomes.1.incomes|stringformat:'d'}},
-                	   {{indentIncomes.2.incomes|stringformat:'d'}},
-                	   {{indentIncomes.3.incomes|stringformat:'d'}},
-                	   {{indentIncomes.4.incomes|stringformat:'d'}},
-                	   {{indentIncomes.5.incomes|stringformat:'d'}}],
-                pointPlacement: 'on'
-            }]
+        series: [{
+            name: '投资额（元）',
+            data: [{{investmentAmount.0.investment|stringformat:'d'}},
+            	   {{investmentAmount.1.investment|stringformat:'d'}},
+            	   {{investmentAmount.2.investment|stringformat:'d'}},
+            	   {{investmentAmount.3.investment|stringformat:'d'}},
+            	   {{investmentAmount.4.investment|stringformat:'d'}},
+            	   {{investmentAmount.5.investment|stringformat:'d'}}],
+            pointPlacement: 'on'
+        }, {
+            name: '收入（元/年）',
+            data: [{{indentIncomes.0.incomes|stringformat:'d'}},
+            	   {{indentIncomes.1.incomes|stringformat:'d'}},
+            	   {{indentIncomes.2.incomes|stringformat:'d'}},
+            	   {{indentIncomes.3.incomes|stringformat:'d'}},
+            	   {{indentIncomes.4.incomes|stringformat:'d'}},
+            	   {{indentIncomes.5.incomes|stringformat:'d'}}],
+            pointPlacement: 'on'
+        }]
 
-        });
     });
+});
     </script> 
     
     

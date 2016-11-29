@@ -2,12 +2,8 @@
   {% block individual %}
   	{% load static %}
   	<script src="http://cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
-    <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
+   <script src="{% static 'dashboard/highcharts/js/highcharts.js' %}"></script>
 	  <script src="https://code.highcharts.com/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/modules/data.js"></script>
-    <script src="https://code.highcharts.com/modules/drilldown.js"></script>
-
-
   {% endblock %}  
   
   {% block content %}
@@ -39,9 +35,9 @@
 	  <span class="counter pull-right"></span>
 
 	  <div class ="row">
-	    <div class ="center-block"  id="basicColumn" style="width:750px; height: 450px"></div>
-	    <div class ="center-block" id="container" style="min-width: 500px; height: 300px"></div>
-    </div>
+	    <div class ="col-md-6 col-xs-6" id="NegativeStackBar" style="width:1000px; height: 600px"></div>
+	    <div class ="col-md-12 col-xs-12" id="container" style="min-width: 1000px; height: 600px"></div>
+	  </div>
 
 	  <table class="table table-hover table-bordered results">
 	    <thead>
@@ -62,7 +58,6 @@
 		      </tr>
 		   {% endfor %}
 		   {% endif %}
-
 	    </tbody>
 	  </table>
 
@@ -70,224 +65,133 @@
   
   {% block myscript %}
      <script type="text/javascript">
+     	$(function () {
+		    // Age categories
+		    var categories = ['0-1', '1-2', '2-3', '3-4',
+		            '4-5', '5-6', '6-7', '7-8', '8-9',
+		            '9-10', '10-11', '11+',];
+		    $(document).ready(function () {
+		        Highcharts.chart('NegativeStackBar', {
+		            chart: {
+		                type: 'bar'
+		            },
+		            title: {
+		                text: '{{district}}站点利润率分布({{month}})'
+		            },
+		            subtitle: {
+		                text: '数据源：<a href="http://123.126.34.161/default/coframe/tools/skins/jyfx/index.jsp">铁塔OA经营分析系统</a>'
+		            },
+		            xAxis: [{
+		                categories: categories,
+		                reversed: false,
+		                labels: {
+		                    step: 1
+		                }
+		            }, { // mirror axis on right side
+		                opposite: true,
+		                reversed: false,
+		                categories: categories,
+		                linkedTo: 0,
+		                labels: {
+		                    step: 1
+		                }
+		            }],
+		            yAxis: {
+		                title: {
+		                    text: null
+		                },
+		                labels: {
+		                    formatter: function () {
+		                        return Math.abs(this.value) + '%';
+		                    }
+		                }
+		            },
+
+		            plotOptions: {
+		                series: {
+		                    stacking: 'normal'
+		                }
+		            },
+
+		            tooltip: {
+		                formatter: function () {
+		                    return '<b>' + this.series.name + ', 比率 ' + this.point.category + '</b><br/>' +
+		                        '占比: ' + Highcharts.numberFormat(Math.abs(this.point.y), 5);
+		                }
+		            },
+
+		            series: [{
+		                name: '亏损',
+		                data: [
+		                {% load static %}
+		                {% if negative_ratio %}
+		                {% for ratio in negative_ratio %}
+		                    {{ratio}},
+		                {%endfor%}
+		                {%endif%}
+		                ]
+		            }, {
+		                name: '盈利',
+		                data: [
+		                {% load static %}
+		                {% if positive_ratio %}
+		                {% for ratio in positive_ratio %}
+		                    {{ratio}},
+		                {%endfor%}
+		                {%endif%}
+		                ]
+		            }]
+		        });
+		    });
+
+		});
+     </script>
+
+     <script type="text/javascript">
         $(function () {
             Highcharts.chart('container', {
                 chart: {
                     type: 'column'
                 },
                 title: {
-                    text: '{{district}}站址盈利率分布统计({{month}})'
-                },
-                subtitle: {
-                    text: '数据来源: <a href="http://123.126.34.161/default/coframe/tools/skins/jyfx/index.jsp">经营分析系统'
+                    text: '分场景营业额'
                 },
                 xAxis: {
                     categories: [
-                        '0-1',
-                        '1-2',
-                        '2-3',
-                        '3-4',
-                        '4-5',
-                        '5-6',
-                        '6-7',
-                        '7-8',
-                        '8-9',
-                        '9-10',
-                        '10-11'
-                    ],
-                    crosshair: true
+                    {% if CoverageSceneList %}
+                    {% for scene in CoverageSceneList %}
+                      '{{scene}}',
+                    {%endfor%}
+                    {%endif%}
+                    ]
                 },
-                yAxis: {
-                    min: 0,
-                    title: {
-                        text: '站址数(个)'
-                    }
+                credits: {
+                    enabled: false
                 },
-                tooltip: {
-                    headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                        '<td style="padding:0"><b>{point.y:.0f}个</b></td></tr>',
-                    footerFormat: '</table>',
-                    shared: true,
-                    useHTML: true
-                },
-                plotOptions: {
-                    column: {
-                        pointPadding: 0.2,
-                        borderWidth: 0
-                    }
-                },
+                
+                yAxis: [{
+        			title: {
+          				text: "金额(元)"
+          			}
+        		}],
+                
                 series: [
-                  
-                   {
-                    name: '负盈利率',
+                {% if turnover %}
+                {%for data,values in turnover.items%}
+                {
+                    name: '{{data}}',
                     data: [
-                      {% for negtive in negative_profit_rate_count %}
-                        {{negtive}},
-                      {% endfor %}
-                    ],dataLabels: {
-                        enabled: true,
-                        rotation: 0,
-                        color: '#FFFFFF',
-                        align: 'center',
-                        format: '{point.y:.0f}', // one decimal
-                        y: 10, // 10 pixels down from the top
-                        style: {
-                            fontSize: '13px',
-                            fontFamily: 'Verdana, sans-serif'
-                        }
-                      }
-                   },{
-                    name: '正盈利率',
-                    data: [
-                      {% for positive in positive_profit_rate_count %}
-                        {{positive}},
-                      {% endfor %}
-                    ],dataLabels: {
-                        enabled: true,
-                        rotation: 0,
-                        color: '#FFFFFF',
-                        align: 'center',
-                        format: '{point.y:.0f}', // one decimal
-                        y: 10, // 10 pixels down from the top
-                        style: {
-                            fontSize: '13px',
-                            fontFamily: 'Verdana, sans-serif'
-                        }
-                      }
-                   },
-
-                  
+                    {% for a in values %}
+                      {{a}},
+                    {%endfor%}
+                    ]
+                },
+                {%endfor%}
+                {%endif%} 
                 ]
             });
         });
-     </script>
 
-     <script type="text/javascript">
-        $(function () {
-          // Create the chart
-          Highcharts.chart('basicColumn', {
-              chart: {
-                  type: 'column'
-              },
-              title: {
-                  text: '{{district}}分场景营业额({{month}})'
-              },
-              subtitle: {
-                  text: '数据来源: <a href="http://123.126.34.161/default/coframe/tools/skins/jyfx/index.jsp">经营分析系统</a>.'
-              },
-              xAxis: {
-                  type: 'category'
-              },
-              yAxis: {
-                  title: {
-                      text: '营业额'
-                  }
-
-              },
-              legend: {
-                  enabled: false
-              },
-              plotOptions: {
-                  series: {
-                      borderWidth: 0,
-                      dataLabels: {
-                          enabled: true,
-                          format: '{point.y:,.2f}元'
-                      }
-                  }
-              },
-
-              tooltip: {
-                  headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                  pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:,.2f}</b>元<br/>'
-              },
-
-              series: [{
-                  name: '场景分类',
-                  colorByPoint: true,
-                  data: [{
-                      name: '城镇乡村',
-                      y: {{CityTownCountrySum}},
-                      drilldown: '城镇乡村'
-                  }, {
-                      name: '大型场所',
-                      y: {{BigSiteEnumSum}},
-                      drilldown: '大型场所'
-                  }, {
-                      name: '交通沿线',
-                      y: {{TransportAlongStreetSum}},
-                      drilldown: '交通沿线'
-                  }, {
-                      name: '景区',
-                      y: {{ScenicRegionSum}},
-                      drilldown: '景区'
-                  }, {
-                      name: '其他',
-                      y: {{OthersSum}},
-                      drilldown: '其他'
-                  }]
-              }],
-              drilldown: {
-                  series: [{
-                      name: '城镇乡村',
-                      id: '城镇乡村',
-                      data: [
-                          {% for key,data in CityTownCountryDict.items %}
-                          [
-                              '{{key}}',
-                              {{data}}
-                          ],
-                          {% endfor %}
-                      ]
-                  }, {
-                      name: '大型场所',
-                      id: '大型场所',
-                      data: [
-                          {% for key,data in BigSiteEnumDict.items %}
-                          [
-                              '{{key}}',
-                              {{data}}
-                          ],
-                          {% endfor %}
-                      ]
-                  }, {
-                      name: '交通沿线',
-                      id: '交通沿线',
-                      data: [
-                          {% for key,data in TransportAlongStreetDict.items %}
-                          [
-                              '{{key}}',
-                              {{data}}
-                          ],
-                          {% endfor %}
-                      ]
-                  }, {
-                      name: '景区',
-                      id: '景区',
-                      data: [
-                          {% for key,data in ScenicRegionDict.items %}
-                          [
-                              '{{key}}',
-                              {{data}}
-                          ],
-                          {% endfor %}
-                      ]
-                  }, {
-                      name: '其他',
-                      id: '其他',
-                      data: [
-                          {% for key,data in OthersDict.items %}
-                          [
-                              '{{key}}',
-                              {{data}}
-                          ],
-                          {% endfor %}
-                      ]
-                  }, ]
-              }
-          });
-      });
      </script>
   {% endblock %}
 
